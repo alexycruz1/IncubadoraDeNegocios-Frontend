@@ -22,4 +22,5 @@
 hs_err_pid*
 
 node_modules
+bower_components
 JS
