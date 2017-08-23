@@ -1,3 +1,22 @@
 .ui.menu{
 	background-color: #ab47bc;
 }
+.ui.fluid.card{
+	border-color: #ab47bc;
+	border-width: 3px;
+	border-style: solid;
+}
+
+.ui.medium.circular.image{
+	border-color: #ab47bc;
+	border-width: 3px;
+	border-style: solid;
+}
+.ui.medium.left.floated.image{
+	border-color: #ab47bc;
+	border-width: 3px;
+	border-style: solid;
+}
+h1{
+	text-align: center;
+}
