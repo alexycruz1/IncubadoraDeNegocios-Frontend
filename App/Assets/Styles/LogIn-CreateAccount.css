@@ -1,0 +1,36 @@
+body {
+  background-image: url('../Images/Bussines.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #464646;
+}
+
+.Watch {
+  background-color: green;
+}
+
+.LogInCard {
+  position: relative;
+  top: 10%;
+}
+
+.CenterInDiv-LogIn {
+  position: relative;
+  left: 10%;
+}
+
+.ImageSize-LogIn{
+  background:green;
+  height: 50%;
+  width: 100%;
+}
+
+.InputDivs-LogIn{
+  width: 100%;
+}
+
+.Clear {
+  clear: both;
+}
