@@ -16,15 +16,28 @@
       <li><a href="https://github.com/vuejs/vueify" target="_blank">vueify</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
+    <button v-on:click = "showData()">Mostra</button>
   </div>
 </template>
 
 <script>
+import businessService from './../services/businessService'
+
 export default {
   name: 'hello',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    showData(){
+      businessService.getBusiness().then(response =>{
+        console.log(response.body[0].name);
+      },
+      response=>{
+        alert('Error');
+      });
     }
   }
 }
