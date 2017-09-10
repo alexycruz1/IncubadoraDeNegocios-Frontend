@@ -17,6 +17,12 @@
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
     <button v-on:click = "showData()">Mostra</button>
+    <button v-on:click = "create()">Creata</button>
+    <button v-on:click = "Modify()">Modifica</button>
+    <button v-on:click = "deleteB()">Borrar</button>
+    <button v-on:click = "getByCode()">Get</button> 
+    <button v-on:click = "addOwner()">ADD</button> 
+    <button v-on:click = "removeOwner()">Remove</button> 
   </div>
 </template>
 
@@ -33,11 +39,44 @@ export default {
   methods: {
     showData(){
       businessService.getAllBusiness().then(response =>{
-        console.log(response.body[0].name);
+        console.log(response.body);
       },
       response=>{
         alert('Error');
       });
+    },
+    create(){
+      var obj = {
+        name: 'nameF',
+        code: 'codeF',
+        location:'locationF',
+        description: 'descriptionF',
+        image: 'imageF'
+      };
+      businessService.createBusiness(obj);
+    },
+    Modify(){
+      var obj = {
+        name: 'varFModificado',
+      };
+      var id = 2;
+      businessService.updateBusiness(obj,id);
+    },
+    deleteB(){
+      businessService.deleteBusiness(1);
+    },
+    getByCode(){
+      businessService.getBusinessByCode("code").then(response => {
+        console.log(response.body);
+      }, response => {
+        alert('Error');
+      })
+    },
+    addOwner(){
+      businessService.addOwner({owner: 1},1);
+    },
+    removeOwner(){
+      businessService.removeOwner({owner: 1},1);
     }
   }
 }
