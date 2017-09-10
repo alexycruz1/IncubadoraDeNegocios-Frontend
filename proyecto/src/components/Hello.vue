@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import messageService from './../services/messageService'
+import taskService from './../services/taskService'
 
 export default {
   name: 'hello',
@@ -38,20 +38,26 @@ export default {
   },
   methods: {
     showData(){
-      messageService.getAllMessages().then(
-        response => {
-          console.log(response.body);
-        }, response => {
-          alert('Error');
-        });
+      taskService.getAllTasks().then(response=>{
+        console.log(response.body);
+      }, response=>{
+        alert('Error');
+      })
     },
     create(){
     },
     Modify(){
+      taskService.updateTask({activity: 'Jugar'},1);
     },
     deleteB(){
     },
     getByCode(){
+      taskService.getTasksByAdviserAndBusiness(2,2).then(
+        response=>{
+        console.log(response.body);
+      }, response=>{
+        alert('Errpr');
+      });
     },
     addOwner(){
     },
