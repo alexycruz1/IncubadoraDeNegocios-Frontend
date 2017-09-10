@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import businessService from './../services/businessService'
+import groupService from './../services/groupService'
 
 export default {
   name: 'hello',
@@ -38,45 +38,34 @@ export default {
   },
   methods: {
     showData(){
-      businessService.getAllBusiness().then(response =>{
-        console.log(response.body);
-      },
-      response=>{
-        alert('Error');
-      });
-    },
-    create(){
-      var obj = {
-        name: 'nameF',
-        code: 'codeF',
-        location:'locationF',
-        description: 'descriptionF',
-        image: 'imageF'
-      };
-      businessService.createBusiness(obj);
-    },
-    Modify(){
-      var obj = {
-        name: 'varFModificado',
-      };
-      var id = 2;
-      businessService.updateBusiness(obj,id);
-    },
-    deleteB(){
-      businessService.deleteBusiness(1);
-    },
-    getByCode(){
-      businessService.getBusinessByCode("code").then(response => {
+      groupService.getAllGroups().then(response => {
         console.log(response.body);
       }, response => {
         alert('Error');
       })
     },
+    create(){
+      var obj = {
+        idChat: 1,
+        name: 'grupoF', 
+        state: 'EstadoF'
+      };
+
+      groupService.createGroup(obj);
+    },
+    Modify(){
+      groupService.updateGroup({name: 'GroupFM'}, 4);
+    },
+    deleteB(){
+      groupService.deleteGroup(4);
+    },
+    getByCode(){
+    },
     addOwner(){
-      businessService.addOwner({owner: 1},1);
+      groupService.addMember({member: 1},3);
     },
     removeOwner(){
-      businessService.removeOwner({owner: 1},1);
+      groupService.removeMember({member: 1},3);
     }
   }
 }
