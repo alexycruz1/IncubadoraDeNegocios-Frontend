@@ -24,6 +24,10 @@ export default {
             alert('Error');
         })
     },
+    
+    getChatByID(chatByID) {
+        return Vue.http.get(url + 'getChatByID/' + chatByID);
+    },
 
     addPersonToChat(newPerson, IDChat) {
         Vue.http.put(url + 'addPersonToChat/' + IDChat, newPerson).then(response => {
