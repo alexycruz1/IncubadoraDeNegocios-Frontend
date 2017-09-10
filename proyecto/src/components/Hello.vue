@@ -16,18 +16,10 @@
       <li><a href="https://github.com/vuejs/vueify" target="_blank">vueify</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
-    <button v-on:click = "showData()">Mostra</button>
-    <button v-on:click = "create()">Creata</button>
-    <button v-on:click = "Modify()">Modifica</button>
-    <button v-on:click = "deleteB()">Borrar</button>
-    <button v-on:click = "getByCode()">Get</button> 
-    <button v-on:click = "addOwner()">ADD</button> 
-    <button v-on:click = "removeOwner()">Remove</button> 
   </div>
 </template>
 
 <script>
-import taskService from './../services/taskService'
 
 export default {
   name: 'hello',
@@ -37,32 +29,7 @@ export default {
     }
   },
   methods: {
-    showData(){
-      taskService.getAllTasks().then(response=>{
-        console.log(response.body);
-      }, response=>{
-        alert('Error');
-      })
-    },
-    create(){
-    },
-    Modify(){
-      taskService.updateTask({activity: 'Jugar'},1);
-    },
-    deleteB(){
-    },
-    getByCode(){
-      taskService.getTasksByAdviserAndBusiness(2,2).then(
-        response=>{
-        console.log(response.body);
-      }, response=>{
-        alert('Errpr');
-      });
-    },
-    addOwner(){
-    },
-    removeOwner(){
-    }
+
   }
 }
 </script>
