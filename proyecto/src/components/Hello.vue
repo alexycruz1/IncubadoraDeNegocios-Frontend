@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import groupService from './../services/groupService'
+import messageService from './../services/messageService'
 
 export default {
   name: 'hello',
@@ -38,34 +38,24 @@ export default {
   },
   methods: {
     showData(){
-      groupService.getAllGroups().then(response => {
-        console.log(response.body);
-      }, response => {
-        alert('Error');
-      })
+      messageService.getAllMessages().then(
+        response => {
+          console.log(response.body);
+        }, response => {
+          alert('Error');
+        });
     },
     create(){
-      var obj = {
-        idChat: 1,
-        name: 'grupoF', 
-        state: 'EstadoF'
-      };
-
-      groupService.createGroup(obj);
     },
     Modify(){
-      groupService.updateGroup({name: 'GroupFM'}, 4);
     },
     deleteB(){
-      groupService.deleteGroup(4);
     },
     getByCode(){
     },
     addOwner(){
-      groupService.addMember({member: 1},3);
     },
     removeOwner(){
-      groupService.removeMember({member: 1},3);
     }
   }
 }
