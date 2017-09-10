@@ -52,5 +52,8 @@ export default{
 			}, response => {
 				alert('Error');
 			});
+	}, 
+	getBusinessById(idBusiness){
+		return Vue.http.get(url + 'getBusinessById/' + idBusiness);
 	}
 }

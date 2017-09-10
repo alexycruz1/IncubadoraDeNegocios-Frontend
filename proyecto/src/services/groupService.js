@@ -62,5 +62,8 @@ export default{
 			}, response => {
 				alert('Error');
 			});
+	},
+	getGroupById(idGroup){
+		return Vue.http.get(url + 'getGroupById/' + idGroup);
 	}
 }

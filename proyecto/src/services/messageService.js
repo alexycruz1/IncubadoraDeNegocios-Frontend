@@ -15,5 +15,8 @@ export default{
 	},
 	getAllMessages(){
 		return Vue.http.get(url + 'getMessages');
+	},
+	getMessageById(idMessage){
+		return Vue.http.get(url + 'getMessageById/' + idMessage);
 	}
 }
