@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     showData(){
-      businessService.getBusiness().then(response =>{
+      businessService.getAllBusiness().then(response =>{
         console.log(response.body[0].name);
       },
       response=>{

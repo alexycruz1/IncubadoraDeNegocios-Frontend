@@ -5,7 +5,7 @@ Vue.use(VueResource);
 var url = 'http://localhost:8000/';
 
 export default{
-	getBusiness(){
+	getAllBusiness(){
 		return Vue.http.get(url + 'getBusiness');
 	}
 }
