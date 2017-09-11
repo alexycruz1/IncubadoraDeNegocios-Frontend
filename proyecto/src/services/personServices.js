@@ -123,5 +123,8 @@ export default {
         }, response => {
             alert('Error');
         });
+    },
+    getPersonById(IDPerson){
+        return Vue.http.get(url + 'getPersonById/' + IDPerson);
     }
 }
