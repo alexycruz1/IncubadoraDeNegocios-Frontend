@@ -18,7 +18,7 @@ export default {
     },
 
     editPerson(updatedFields, IDPerson) {
-        Vue.http.put(url + 'editPerson/' + IDPerson, updatedFields).then(response => {
+        Vue.http.put(url + 'IDN/editPerson/' + IDPerson, updatedFields).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');

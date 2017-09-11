@@ -24,7 +24,7 @@
     				</div>
     				<div class="extra content">
       					<span class="right floated">
-        					<div class="ui basic green button">Modiifcar</div>
+        					<div class="ui basic green button" v-on:click = "showUserModal(user)">Modiifcar</div>
       					</span>
     				</div>
 				</div>
@@ -104,6 +104,62 @@
  		 	</div>
 		</div>
 
+		<div class = "ui modal" id = "usuario">
+			<i class = "close icon"></i>
+			<div class = "header">Modificacion</div>
+			<div class = "ui center aligned grid">
+				<div class = "seven wide column">
+					<div class = "image content">
+						<div class = "ui medium image">
+							<img v-bind:src="currentUser.image">
+						</div>
+					</div>
+				</div>
+				<div class = "seven wide column">
+					<div class = "ui form">
+						<div class = "field">
+							<label><a >Nombre</a></label>
+							<input type="text" v-bind:value = "currentUser.name" v-model = "currentUser.name">
+						</div>
+						<div class = "field">
+							<label><a >Usuario</a></label>
+							<input type="text" v-bind:value = "currentUser.username" v-model = "currentUser.username">
+						</div>
+						<div class = "field">
+							<label><a >Edad</a></label>
+							<input type="text" v-bind:value="currentUser.age" v-model = "currentUser.age">
+						</div>
+						<div class = "field">
+							<label><a >Email</a></label>
+							<input type="text" v-bind:value="currentUser.email" v-model = "currentUser.email">
+						</div>
+						<div class = "field">
+							<label><a >Telefono</a></label>
+							<input type="text" v-bind:value = "currentUser.phone" v-model = "currentUser.phone">
+						</div>
+						<div class = "field">
+							<label><a >Profesion</a></label>
+							<input type="text" v-bind:value = "currentUser.profession" v-model = "currentUser.profession">
+						</div>
+						<div class = "field">
+							<label><a >Direccion</a></label>
+							<input type="text" v-bind:value = "currentUser.address" v-model = "currentUser.address">
+						</div>	
+					</div>
+				</div>
+			</div>
+			<div class="actions">
+    			<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button"
+    			v-on:click = "modifyUser()">
+      				Modificar
+      				<i class="checkmark icon"></i>
+    			</div>
+ 		 	</div>
+		</div>
+
 		<div class = "ui mini modal" id = "deleteBusiness">
 			<i class = "close icon"></i>
 			<div class = "header">Desea Eliminar?</div>
@@ -153,7 +209,8 @@
 			return {
 				listOfBusiness: business,
 				users: people,
-				currentBusiness: Object
+				currentBusiness: Object,
+				currentUser:Object
 			};
 		},
 		methods: {
@@ -161,12 +218,22 @@
 				this.currentBusiness = element;
 				$('#empresa').modal('show');
 			},
+			showUserModal(element){
+				this.currentUser = element;
+				$('#usuario').modal('show');
+			},
 			showDeleteModal(element){
 				this.currentBusiness = element;
 				$('#deleteBusiness').modal('show');
 			},
 			modifyBusiness(){
 				businessService.updateBusiness(this.currentBusiness,this.currentBusiness.idBusiness);
+			},
+			modifyUser(){
+				console.log('Mod');
+				console.log(this.users[0].IDPerson);
+				console.log(this.currentUser);
+				personService.editPerson(this.currentUser,this.users[0].IDPerson);
 			},
 			deleteBusinessFromList(){
 				var obj = [{business: this.currentBusiness.idBusiness+""},{owner:this.users[0].IDPerson+""}];
@@ -190,9 +257,9 @@
 						alert('Error');
 				});
 				}
-	},response => {
-		alert('Error');
-	});
+				},response => {
+					alert('Error');
+				});
 			}
 		}
 	}
