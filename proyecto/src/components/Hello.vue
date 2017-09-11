@@ -20,6 +20,7 @@
 </template>
 
 <script>
+sessionStorage.setItem("idP",2);
 export default {
   name: 'hello',
   data () {
