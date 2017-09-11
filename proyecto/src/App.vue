@@ -8,10 +8,11 @@
     		<a class="item">
       			Inicio
     		</a>
-    		<a class="item active">
-      			Perfil
-    		</a>
-    		
+        <router-link to = "/profile">
+          <a class="item active">
+            Perfil
+          </a>
+        </router-link>
     		<a class="item" v-if = !assesor>
       			Asesores Disponibles
     		</a>
@@ -67,19 +68,14 @@
 </template>
 
 <script>
-import Hello from './components/Hello.vue'
-
 export default {
   name: 'app',
   data(){
   	return {
-  		logged: false, 
+  		logged: true, 
   		assesor: true
   	}
   },
-  components: {
-    Hello
-  }, 
   methods: {
 
   }

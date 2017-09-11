@@ -5,6 +5,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
 import Hello from './components/Hello.vue'
+import Profile from './components/Profile.vue'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -13,6 +14,11 @@ const router = new VueRouter({
 		path: '/',
 		name: 'hello', 
 		component: Hello
+	},
+	{
+		path: '/profile',
+		name: 'profile',
+		component: Profile
 	}
 	]
 });
