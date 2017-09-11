@@ -17,6 +17,7 @@ export default{
 		});
 	},
 	updateBusiness(updatedFields,idBusiness){
+		console.log('Llefa');
 		Vue.http.put(url + 'updateBusiness/' + idBusiness,updatedFields).then(
 				response => {
 					alert('Exito');

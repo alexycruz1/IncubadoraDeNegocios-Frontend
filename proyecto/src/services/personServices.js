@@ -78,7 +78,7 @@ export default {
     },
     
     addGroup(newGroup, IDPerson){
-        Vue.http.put(url + 'addGroup/' + IDPerson, newGroup).then(response => {
+        Vue.http.put(url + 'addGroupToPerson/' + IDPerson, newGroup).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -86,7 +86,7 @@ export default {
     },
 
     deleteGroup(group, IDPerson){
-        Vue.http.put(url + 'deleteGroup/' + IDPerson, group).then(response => {
+        Vue.http.put(url + 'deleteGroupFromPerson/' + IDPerson, group).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -94,7 +94,7 @@ export default {
     },
 
     addEvent(newEvent, IDPerson){
-        Vue.http.put(url + 'addEvent/' + IDPerson, newEvent).then(response => {
+        Vue.http.put(url + 'addEventToPerson/' + IDPerson, newEvent).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -102,7 +102,7 @@ export default {
     },
 
     deleteEvent(event, IDPerson){
-        Vue.http.put(url + 'deleteEvent/' + IDPerson, event).then(response => {
+        Vue.http.put(url + 'deleteEventFromPerson/' + IDPerson, event).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -110,7 +110,7 @@ export default {
     },
 
     addBusiness(newBusiness, IDPerson){
-        Vue.http.put(url + 'addBusiness/' + IDPerson, newBusiness).then(response => {
+        Vue.http.put(url + 'addBusinessToPerson/' + IDPerson, newBusiness).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -118,7 +118,8 @@ export default {
     },
 
     deleteBusiness(business, IDPerson){
-        Vue.http.put(url + 'deleteBusiness/' + IDPerson, business).then(response => {
+        alert('Person');
+        Vue.http.put(url + 'deleteBusinessFromPerson/' + IDPerson, business).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');

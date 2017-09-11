@@ -54,7 +54,7 @@
       						<div class="ui two buttons">
         						<div class="ui basic green button"
         						v-on:click = "showBusinessModal(element)">Modiifcar</div>
-        						<div class="ui basic red button">Eliminar</div>
+        						<div class="ui basic red button" v-on:click = "showDeleteModal(element)">Eliminar</div>
       						</div>
     					</div>
 					</div>
@@ -96,11 +96,28 @@
     			<div class="ui black deny button">
       				Cancelar
     			</div>
-    			<div class="ui positive right labeled icon button">
+    			<div class="ui positive right labeled icon button"
+    			v-on:click = "modifyBusiness()">
       				Modificar
       				<i class="checkmark icon"></i>
     			</div>
  		 	</div>
+		</div>
+
+		<div class = "ui mini modal" id = "deleteBusiness">
+			<i class = "close icon"></i>
+			<div class = "header">Desea Eliminar?</div>
+			<div class = "extra content">
+				<div class="actions">
+    				<div class="ui black deny button">
+      					Cancelar
+    				</div>
+    				<div class="ui red right labeled icon button" v-on:click = "deleteBusinessFromList()">
+      					Eliminar
+      					<i class="checkmark icon"></i>
+    				</div>
+ 		 		</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -112,11 +129,12 @@
 	var people = [];
 	var person;
 
-	personService.getPersonById(2).then(response => {
+	personService.getPersonById(3).then(response => {
 		people.push(response.body[0]);
 		person = response.body[0];
-		for(let i = 0; i < person.business.length; i++){
-		businessService.getBusinessById(person.business[i]).then(
+		console.log(person);
+		for(let i = 0; i < person.listOfBusiness.length; i++){
+		businessService.getBusinessById(person.listOfBusiness[i]).then(
 			response =>{
 				console.log(response.body[0]);
 				business.push(response.body[0]);
@@ -143,8 +161,38 @@
 				this.currentBusiness = element;
 				$('#empresa').modal('show');
 			},
+			showDeleteModal(element){
+				this.currentBusiness = element;
+				$('#deleteBusiness').modal('show');
+			},
 			modifyBusiness(){
 				businessService.updateBusiness(this.currentBusiness,this.currentBusiness.idBusiness);
+			},
+			deleteBusinessFromList(){
+				var obj = [{business: this.currentBusiness.idBusiness+""},{owner:this.users[0].IDPerson+""}];
+				businessService.removeOwner(obj[1],this.currentBusiness.idBusiness);
+				personService.deleteBusiness(obj[0],this.users[0].IDPerson);
+				this.refreshCards();
+			}, 
+			refreshCards(){
+				business = [];
+				this.listOfBusiness = [];
+				personService.getPersonById(this.users[0].IDPerson).then(response => {
+					person = response.body[0];
+					console.log(person);
+					for(let i = 0; i < person.listOfBusiness.length; i++){
+					businessService.getBusinessById(person.listOfBusiness[i]).then(
+					response =>{
+						console.log(response.body[0]);
+						business.push(response.body[0]);
+						this.listOfBusiness.push(response.body[0]);
+					}, response => {
+						alert('Error');
+				});
+				}
+	},response => {
+		alert('Error');
+	});
 			}
 		}
 	}
