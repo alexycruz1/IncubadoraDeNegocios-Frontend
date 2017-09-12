@@ -248,7 +248,6 @@
 				$('#deleteBusiness').modal('show');
 			},
 			setNewOwner(element){
-				console.log('Llegue');
 				let alreadyOwner = false;
 				for(let i = 0; i < this.currentBusiness.idOwners.length; i++){
 					if(this.currentBusiness.idOwners[i] === element.IDPerson){
@@ -316,10 +315,8 @@
 					for(let i = 0; i < person.listOfBusiness.length; i++){
 					businessService.getBusinessById(person.listOfBusiness[i]).then(
 					response =>{
-						console.log(response.body[0]);
 						business.push(response.body[0]);
 						this.listOfBusiness.push(response.body[0]);
-						alert('Exit refreshing');
 					}, response => {
 						alert('Error');
 				});
