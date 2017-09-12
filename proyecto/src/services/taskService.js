@@ -2,45 +2,31 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
-var url = 'http://localhost:8000/';
+var url = 'http://localhost:8000/IDN/';
 
 export default{
 	createTask(newTask){
-		Vue.http.post(url+'createTask', newTask).then(response => {
-			alert('Exito');
-		}, response => {
-			alert('Error');
-		});
+		return Vue.http.post(url+'Task', newTask);
 	}, 
 
 	getAllTasks(){
-		return Vue.http.get(url + 'getTasks');
+		return Vue.http.get(url + 'Tasks');
 	},
 
 	updateTask(newTask,idTask){
-		Vue.http.put(url + 'updateTask/' + idTask,newTask).then(
-			response=>{
-				alert('Exito');
-			},response=>{
-				alert('Error');
-			});
+		return Vue.http.put(url + 'Task/' + idTask,newTask);
 	},
 	deleteTask(idTask){
-		Vue.http.delete(url+'deleteTask/' + idTask).then(
-			response => {
-				alert('Exito');
-			}, response => {
-				alert('Error');
-			});
+		return Vue.http.delete(url+'Task/' + idTask);
 	},
 	getTasksByAdviser(idAdviser){
-		return Vue.http.get(url + 'getTasksByAdviser/' + idAdviser);
+		return Vue.http.get(url + 'TasksByAdviser/' + idAdviser);
 	},
 	getTasksByBusiness(idBusiness){
-		return Vue.http.get(url + 'getTasksByBusiness/' + idBusiness);
+		return Vue.http.get(url + 'TasksByBusiness/' + idBusiness);
 	},
 	getTasksByAdviserAndBusiness(idAdviser,idBusiness){
-		return Vue.http.get(url + 'getTasksByAdviserAndBusiness/' + idAdviser + ','+idBusiness);
+		return Vue.http.get(url + 'TasksByAdviserAndBusiness/' + idAdviser + ','+idBusiness);
 	}
 
 }

@@ -2,130 +2,62 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
-var url = 'http://localhost:8000/';
+var url = 'http://localhost:8000/IDN/';
 
 export default {
     getPeople() {
-        return Vue.http.get(url + 'getPeople');
+        return Vue.http.get(url + 'People');
     },
 
     createPerson(newPerson) {
-        Vue.http.post(url + 'createPerson', newPerson).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        return Vue.http.post(url + 'Person', newPerson);
     },
 
     editPerson(updatedFields, IDPerson) {
-        Vue.http.put(url + 'IDN/editPerson/' + IDPerson, updatedFields).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        })
+        return Vue.http.put(url + 'Person/' + IDPerson, updatedFields);
     },
 
     deletePerson(IDPerson) {
-        Vue.http.delete(url + 'deletePerson/' + IDPerson).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        })
+        return Vue.http.delete(url + 'Person/' + IDPerson);
     },
 
     getPersonByName(personByName) {
-        return Vue.http.get(url + 'getPersonByName/' + personByName);
-    },
-
-    getPersonByUsername(personByUsername) {
-        return Vue.http.get(url + 'getPersonByUsername/' + personByUsername);
-    },
-
-    getPersonByAge(PersonByAge) {
-        return Vue.http.get(url + 'getPersonByAge/' + PersonByAge);
-    },
-
-    getPersonByEmail(PersonByEmail) {
-        return Vue.http.get(url + 'getPersonByEmail/' + PersonByEmail);
-    },
-
-    getPersonByPhone(PersonByPhone) {
-        return Vue.http.get(url + 'getPersonByPhone/' + PersonByPhone);
-    },
-
-    getPersonByProfession(PersonByProfession) {
-        return Vue.http.get(url + 'getPersonByProfession/' + PersonByProfession);
-    },
-
-    getPersonByAddress(PersonByAddress) {
-        return Vue.http.get(url + 'getPersonByAddress' + PersonByAddress);
+        return Vue.http.get(url + 'Person/' + personByName);
     },
 
     addFriend(newFriend, IDPerson) {
-        Vue.http.put(url + 'addFriend/' + IDPerson, newFriend).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        return Vue.http.put(url + 'addFriend/' + IDPerson, newFriend);
     },
 
     deleteFriend(friend, IDPerson) {
-        Vue.http.put(url + 'deleteFriend/' + IDPerson, friend).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        return Vue.http.put(url + 'deleteFriend/' + IDPerson, friend);
     },
     
     addGroup(newGroup, IDPerson){
-        Vue.http.put(url + 'addGroupToPerson/' + IDPerson, newGroup).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        return Vue.http.put(url + 'GroupToPerson/' + IDPerson, newGroup);
     },
 
     deleteGroup(group, IDPerson){
-        Vue.http.put(url + 'deleteGroupFromPerson/' + IDPerson, group).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        return Vue.http.put(url + 'GroupFromPerson/' + IDPerson, group);
     },
 
     addEvent(newEvent, IDPerson){
-        Vue.http.put(url + 'addEventToPerson/' + IDPerson, newEvent).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        return Vue.http.put(url + 'EventToPerson/' + IDPerson, newEvent);
     },
 
     deleteEvent(event, IDPerson){
-        Vue.http.put(url + 'deleteEventFromPerson/' + IDPerson, event).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        return Vue.http.put(url + 'EventFromPerson/' + IDPerson, event);
     },
 
     addBusiness(newBusiness, IDPerson){
-        Vue.http.put(url + 'addBusinessToPerson/' + IDPerson, newBusiness).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        return Vue.http.put(url + 'BusinessToPerson/' + IDPerson, newBusiness);
     },
 
     deleteBusiness(business, IDPerson){
-        alert('Person');
-        Vue.http.put(url + 'deleteBusinessFromPerson/' + IDPerson, business).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        console.log(business);
+        return Vue.http.put(url + 'BusinessFromPerson/' + IDPerson, business);
     },
     getPersonById(IDPerson){
-        return Vue.http.get(url + 'getPersonById/' + IDPerson);
+        return Vue.http.get(url + 'PersonById/' + IDPerson);
     }
 }

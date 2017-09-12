@@ -21,8 +21,8 @@
     		</a>
 
     		<div class="right menu">
-    			<div class="ui dropdown item">
-      				Actividades <i class="dropdown icon"></i>
+    			<div  id = "dropMenu" class="ui dropdown item" >
+      				Actividades <i class="dropdown icon" v-on:click = "showMenu()"></i>
       				<div class="menu">
         				<a class="item">Grupos</a>
         				<a class="item">Eventos</a>
@@ -77,7 +77,9 @@ export default {
   	}
   },
   methods: {
-
+      showMenu(){
+        $('#dropMenu').dropdown();
+      }
   }
 }
 </script>
