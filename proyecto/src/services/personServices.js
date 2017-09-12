@@ -54,7 +54,7 @@ export default {
     },
 
     deleteBusiness(business, IDPerson){
-        alert('Person');
+        console.log(business);
         return Vue.http.put(url + 'BusinessFromPerson/' + IDPerson, business);
     },
     getPersonById(IDPerson){

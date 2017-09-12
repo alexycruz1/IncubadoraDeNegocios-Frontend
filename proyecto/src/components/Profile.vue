@@ -6,6 +6,7 @@
 				<div class = "ui big message">
 					Perfil Personal
 				</div>
+				
 				<div class = "ui fluid card" v-for = "user of users">
 					<div class="image">
       					<img v-bind:src="user.image">
@@ -28,13 +29,14 @@
       					</span>
     				</div>
 				</div>
+				
 			</div>
 			<div class = "one wide column">
 				<div class = "ui vertical divider"></div>
 			</div>
 			<div class = "seven wide column">
 				<div class = "ui big message">
-					Perfile de Empresas
+					Perfil de Empresas
 				</div>
 				<div class = "ui two cards">
 					<div class = "ui fluid card" v-for = "element of listOfBusiness">
@@ -60,7 +62,8 @@
 					</div>
 				</div>
 			</div>
-			<div class = "one wide column"></div>	
+			<div class = "one wide column"></div>
+
 		</div>
 		<br>
 
@@ -88,11 +91,22 @@
 						<div class = "field">
 							<label><a >Descripcion</a></label>
 							<input type="text" v-bind:value="currentBusiness.description" v-model = "currentBusiness.description">
-						</div>	
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="actions">
+				<div id = "menu" class = "ui dropdown" >
+					<i class = "add user icon" v-on:click = "dropDown()"></i>
+					<div class = "text" v-on:click = "dropDown()"> Agregar nuevo Fundador</div>
+					<i class = "dropdown icon" v-on:click = "dropDown()"></i>
+					<div class = "menu">
+						<div class = "item" v-for = "allUser of allUsers" v-on:click = "setNewOwner(allUser)">
+							<img clas = "ui avatar image" v-bind:src="allUser.image">
+							{{allUser.name}}
+						</div>	
+					</div>
+				</div>
     			<div class="ui black deny button">
       				Cancelar
     			</div>
@@ -185,36 +199,43 @@
 	var people = [];
 	var person;
 
+	
+	
 	personService.getPersonById(3).then(response => {
-		people.push(response.body[0]);
-		person = response.body[0];
-		console.log(person);
-		for(let i = 0; i < person.listOfBusiness.length; i++){
-		businessService.getBusinessById(person.listOfBusiness[i]).then(
-			response =>{
-				console.log(response.body[0]);
-				business.push(response.body[0]);
-			}, response => {
+				people.push(response.body[0]);
+				person = response.body[0];
+				for(let i = 0; i < person.listOfBusiness.length; i++){
+				businessService.getBusinessById(person.listOfBusiness[i]).then(
+					response =>{
+					business.push(response.body[0]);
+				}, response => {
+					alert('Error');
+				});
+			}
+			},response => {
 				alert('Error');
 			});
-	}
-	},response => {
-		alert('Error');
-	});
-
 	
 	export default {
 		name: 'profile',
 		data(){
 			return {
+				allUsers: [],
 				listOfBusiness: business,
 				users: people,
 				currentBusiness: Object,
-				currentUser:Object
+				currentUser:Object,
+				newOwner: Object
 			};
 		},
 		methods: {
 			showBusinessModal(element){
+				console.log('Empresa: ', element);
+				personService.getPeople().then(response=>{
+						this.allUsers = response.body;
+					}, response=>{
+						alert('Error');
+				});
 				this.currentBusiness = element;
 				$('#empresa').modal('show');
 			},
@@ -226,30 +247,79 @@
 				this.currentBusiness = element;
 				$('#deleteBusiness').modal('show');
 			},
+			setNewOwner(element){
+				console.log('Llegue');
+				let alreadyOwner = false;
+				for(let i = 0; i < this.currentBusiness.idOwners.length; i++){
+					if(this.currentBusiness.idOwners[i] === element.IDPerson){
+						alreadyOwner = true;
+						console.log('Ya es');
+					}
+				}
+				if(!alreadyOwner){
+					this.newOwner = element;
+					console.log('NoEra')
+				}
+			},
+			dropDown(){
+				$('#menu').dropdown();
+			},
 			modifyBusiness(){
-				businessService.updateBusiness(this.currentBusiness,this.currentBusiness.idBusiness);
+				businessService.updateBusiness(this.currentBusiness,this.currentBusiness.idBusiness).then(response=>{
+					if(this.newOwner.IDPerson!=undefined){
+						businessService.addOwner({owner: this.newOwner.IDPerson},this.currentBusiness.idBusiness).then(response =>{
+							alert('Exito');
+						}, response => {
+							alert('Error');
+						});
+
+						personService.addBusiness({business: this.currentBusiness.idBusiness},this.newOwner.IDPerson).then(response =>{
+							alert('Exito');
+						}, response => {
+							alert('Error');
+						});
+					}
+					alert('Exito');
+				}, response => {
+					alert('Error');
+				});
 			},
 			modifyUser(){
-				personService.editPerson(this.currentUser,this.users[0].IDPerson);
+				personService.editPerson(this.currentUser,this.users[0].IDPerson).then(response=>{
+					alert('Exito');
+				}, response => {
+					alert('Error');
+				});
 			},
 			deleteBusinessFromList(){
-				var obj = [{business: this.currentBusiness.idBusiness+""},{owner:this.users[0].IDPerson+""}];
-				businessService.removeOwner(obj[1],this.currentBusiness.idBusiness);
-				personService.deleteBusiness(obj[0],this.users[0].IDPerson);
+				var obj = [{business: this.currentBusiness.idBusiness},{owner:this.users[0].IDPerson}];
+
+				businessService.removeOwner(obj[1],this.currentBusiness.idBusiness).then(response=>{
+					alert('Exito');
+				}, response => {
+					alert('Error');
+				});
+
+				personService.deleteBusiness(obj[0],this.users[0].IDPerson).then(response=>{
+					alert('Exito');
+				}, response => {
+					alert('Error');
+				});
+
 				this.refreshCards();
 			}, 
 			refreshCards(){
-				business = [];
-				this.listOfBusiness = [];
 				personService.getPersonById(this.users[0].IDPerson).then(response => {
+					business = [];
+					this.listOfBusiness = [];
 					person = response.body[0];
-					console.log(person);
 					for(let i = 0; i < person.listOfBusiness.length; i++){
 					businessService.getBusinessById(person.listOfBusiness[i]).then(
 					response =>{
 						console.log(response.body[0]);
 						business.push(response.body[0]);
 						this.listOfBusiness.push(response.body[0]);
+						alert('Exit refreshing');
 					}, response => {
 						alert('Error');
 				});
