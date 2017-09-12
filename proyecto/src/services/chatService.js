@@ -2,62 +2,38 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
-var url = 'http://localhost:8000/';
+var url = 'http://localhost:8000/IDN/';
 
 export default {
     getChats() {
-        return Vue.http.get(url + 'getChats');
+        return Vue.http.get(url + 'Chats');
     },
 
     createChat(newChat) {
-        Vue.http.post(url + 'createChat', newChat).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        Vue.http.post(url + 'Chat', newChat);
     },
 
     deleteChat(IDChat) {
-        Vue.http.delete(url + 'deleteChat/' + IDChat).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        })
+        Vue.http.delete(url + 'Chat/' + IDChat);
     },
     
     getChatByID(chatByID) {
-        return Vue.http.get(url + 'getChatByID/' + chatByID);
+        return Vue.http.get(url + 'ChatByID/' + chatByID);
     },
 
     addPersonToChat(newPerson, IDChat) {
-        Vue.http.put(url + 'addPersonToChat/' + IDChat, newPerson).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        Vue.http.put(url + 'PersonToChat/' + IDChat, newPerson);
     },
 
     deletePersonInChat(person, IDChat) {
-        Vue.http.put(url + 'deletePersonInChat/' + IDChat, person).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        Vue.http.put(url + 'PersonInChat/' + IDChat, person);
     },
 
     addMessageToChat(newMessage, IDChat) {
-        Vue.http.put(url + 'addMessageToChat/' + IDChat, newMessage).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        Vue.http.put(url + 'MessageToChat/' + IDChat, newMessage);
     },
 
     deleteMessageInChat(message, IDChat) {
-        Vue.http.put(url + 'deleteMessageInChat/' + IDChat, message).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
-    },    
+        Vue.http.put(url + 'MessageInChat/' + IDChat, message);
+    }
 }
