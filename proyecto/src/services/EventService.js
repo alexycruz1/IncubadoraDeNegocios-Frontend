@@ -2,15 +2,15 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
-var url = 'http://localhost:8000/';
+var url = 'http://localhost:8000/IDN/';
 
 export default {
-    getChats() {
-        return Vue.http.get(url + 'getChats');
+    getEvents() {
+        return Vue.http.get(url + 'Events');
     },
 
-    createChat(newChat) {
-        Vue.http.post(url + 'createChat', newChat).then(response => {
+    createEvent(newEvent) {
+        Vue.http.post(url + 'createEvent', newEvent).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -18,7 +18,7 @@ export default {
     },
 
     deleteEvent(IDEvent) {
-        Vue.http.delete(url + 'deleteEvent/' + IDEvent).then(response => {
+        Vue.http.delete(url + 'Event/' + IDEvent).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -26,15 +26,15 @@ export default {
     },
 
     getEventByName(eventByName) {
-        return Vue.http.get(url + 'getEventByName/' + eventByName);
+        return Vue.http.get(url + 'EventByName/' + eventByName);
     },
 
     getEventByID(eventByID) {
-        return Vue.http.get(url + 'getEventByID/' + eventByID);
+        return Vue.http.get(url + 'EventByID/' + eventByID);
     },
 
     editEvent(updatedFields, IDEvent) {
-        Vue.http.put(url + 'editEvent/' + IDEvent, updatedFields).then(response => {
+        Vue.http.put(url + 'Event/' + IDEvent, updatedFields).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -42,7 +42,7 @@ export default {
     },
 
     addPersonToEvent(newPerson, IDEvent) {
-        Vue.http.put(url + 'addPersonToEvent/' + IDEvent, newPerson).then(response => {
+        Vue.http.put(url + 'PersonToEvent/' + IDEvent, newPerson).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
@@ -50,7 +50,7 @@ export default {
     },
 
     deletePersonInEvent(person, IDEvent) {
-        Vue.http.put(url + 'deletePersonInEvent/' + IDEvent, person).then(response => {
+        Vue.http.put(url + 'PersonInEvent/' + IDEvent, person).then(response => {
             alert('Exito');
         }, response => {
             alert('Error');
