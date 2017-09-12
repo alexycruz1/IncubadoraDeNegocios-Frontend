@@ -230,9 +230,6 @@
 				businessService.updateBusiness(this.currentBusiness,this.currentBusiness.idBusiness);
 			},
 			modifyUser(){
-				console.log('Mod');
-				console.log(this.users[0].IDPerson);
-				console.log(this.currentUser);
 				personService.editPerson(this.currentUser,this.users[0].IDPerson);
 			},
 			deleteBusinessFromList(){
