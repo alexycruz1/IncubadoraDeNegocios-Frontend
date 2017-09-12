@@ -2,11 +2,11 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
-var url = 'http://localhost:8000/';
+var url = 'http://localhost:8000/IDN/';
 
 export default{
 	createGroup(newGroup){
-		Vue.http.post(url+'createGroup',newGroup).then(
+		Vue.http.post(url+'Group',newGroup).then(
 			response => {
 				alert('Exito');
 			}, response => {
@@ -14,10 +14,10 @@ export default{
 			});
 	},
 	getAllGroups(){
-		return Vue.http.get(url+'getGroups');
+		return Vue.http.get(url+'Groups');
 	},
 	updateGroup(newGroup,idGroup){
-		return Vue.http.put(url+'updateGroup/' + idGroup,
+		return Vue.http.put(url+'Group/' + idGroup,
 			newGroup).then(response => {
 				alert('Exito');
 			}, response => {
@@ -25,7 +25,7 @@ export default{
 			});
 	},
 	deleteGroup(idGroup){
-		Vue.http.delete(url + 'deleteGroup/' + idGroup).then(response => {
+		Vue.http.delete(url + 'Group/' + idGroup).then(response => {
 				alert('Exito');
 			},response => {
 				alert('Error');
@@ -64,6 +64,6 @@ export default{
 			});
 	},
 	getGroupById(idGroup){
-		return Vue.http.get(url + 'getGroupById/' + idGroup);
+		return Vue.http.get(url + 'Group/' + idGroup);
 	}
 }

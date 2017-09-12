@@ -72,7 +72,7 @@ export default {
   name: 'app',
   data(){
   	return {
-  		logged: true, 
+  		logged: false, 
   		assesor: true
   	}
   },

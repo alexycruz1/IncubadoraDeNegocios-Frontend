@@ -2,11 +2,11 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
-var url = 'http://localhost:8000/';
+var url = 'http://localhost:8000/IDN';
 
 export default{
 	createMessage(newMessage){
-		Vue.http.post(url + 'createMessage', newMessage).then(
+		Vue.http.post(url + 'Message', newMessage).then(
 			response => {
 				alert('Exito');
 			}, response => {
@@ -14,9 +14,9 @@ export default{
 			});
 	},
 	getAllMessages(){
-		return Vue.http.get(url + 'getMessages');
+		return Vue.http.get(url + 'Messages');
 	},
 	getMessageById(idMessage){
-		return Vue.http.get(url + 'getMessageById/' + idMessage);
+		return Vue.http.get(url + 'MessageById/' + idMessage);
 	}
 }

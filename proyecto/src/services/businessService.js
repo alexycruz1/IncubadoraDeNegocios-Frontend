@@ -2,14 +2,14 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
-var url = 'http://localhost:8000/';
+var url = 'http://localhost:8000/IDN/';
 
 export default{
 	getAllBusiness(){
-		return Vue.http.get(url + 'getBusiness');
+		return Vue.http.get(url + 'Business');
 	},
 	createBusiness(business){
-		Vue.http.post(url + 'createBusiness',business).then(
+		Vue.http.post(url + 'Business',business).then(
 			response => {
 				alert('Exito');
 			}, response => {
@@ -18,7 +18,7 @@ export default{
 	},
 	updateBusiness(updatedFields,idBusiness){
 		console.log('Llefa');
-		Vue.http.put(url + 'updateBusiness/' + idBusiness,updatedFields).then(
+		Vue.http.put(url + 'Business/' + idBusiness,updatedFields).then(
 				response => {
 					alert('Exito');
 				},
@@ -28,7 +28,7 @@ export default{
 			)
 	},
 	deleteBusiness(idBusiness){
-		Vue.http.delete(url + 'deleteBusiness/' + idBusiness).then(
+		Vue.http.delete(url + 'Business/' + idBusiness).then(
 			response => {
 				alert('Exito');
 			}, response => {
@@ -36,7 +36,7 @@ export default{
 			});
 	},
 	getBusinessByCode(id){
-		return Vue.http.get(url + 'getBusinessByCode/' + id);
+		return Vue.http.get(url + 'BusinessByCode/' + id);
 	},
 	addOwner(newOwner,idBusiness){
 		Vue.http.put(url + 'addBusinessOwner/' + idBusiness,newOwner).then(
@@ -55,6 +55,6 @@ export default{
 			});
 	}, 
 	getBusinessById(idBusiness){
-		return Vue.http.get(url + 'getBusinessById/' + idBusiness);
+		return Vue.http.get(url + 'BusinessById/' + idBusiness);
 	}
 }
