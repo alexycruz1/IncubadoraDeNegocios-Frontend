@@ -6,11 +6,7 @@ var url = 'http://localhost:8000/IDN/';
 
 export default{
 	createTask(newTask){
-		Vue.http.post(url+'Task', newTask).then(response => {
-			alert('Exito');
-		}, response => {
-			alert('Error');
-		});
+		return Vue.http.post(url+'Task', newTask);
 	}, 
 
 	getAllTasks(){
@@ -18,20 +14,10 @@ export default{
 	},
 
 	updateTask(newTask,idTask){
-		Vue.http.put(url + 'Task/' + idTask,newTask).then(
-			response=>{
-				alert('Exito');
-			},response=>{
-				alert('Error');
-			});
+		return Vue.http.put(url + 'Task/' + idTask,newTask);
 	},
 	deleteTask(idTask){
-		Vue.http.delete(url+'Task/' + idTask).then(
-			response => {
-				alert('Exito');
-			}, response => {
-				alert('Error');
-			});
+		return Vue.http.delete(url+'Task/' + idTask);
 	},
 	getTasksByAdviser(idAdviser){
 		return Vue.http.get(url + 'TasksByAdviser/' + idAdviser);

@@ -6,12 +6,7 @@ var url = 'http://localhost:8000/IDN/';
 
 export default{
 	createMessage(newMessage){
-		Vue.http.post(url + 'Message', newMessage).then(
-			response => {
-				alert('Exito');
-			}, response => {
-				alert('Error');
-			});
+		return Vue.http.post(url + 'Message', newMessage);
 	},
 	getAllMessages(){
 		return Vue.http.get(url + 'Messages');

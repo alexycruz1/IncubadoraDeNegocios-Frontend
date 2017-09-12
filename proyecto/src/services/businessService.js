@@ -9,50 +9,23 @@ export default{
 		return Vue.http.get(url + 'Business');
 	},
 	createBusiness(business){
-		Vue.http.post(url + 'Business',business).then(
-			response => {
-				alert('Exito');
-			}, response => {
-				alert('Error');
-		});
+		 return Vue.http.post(url + 'Business',business);
 	},
 	updateBusiness(updatedFields,idBusiness){
 		console.log('Llefa');
-		Vue.http.put(url + 'Business/' + idBusiness,updatedFields).then(
-				response => {
-					alert('Exito');
-				},
-				response =>{
-					alert('Error');
-				}
-			)
+		return Vue.http.put(url + 'Business/' + idBusiness,updatedFields);
 	},
 	deleteBusiness(idBusiness){
-		Vue.http.delete(url + 'Business/' + idBusiness).then(
-			response => {
-				alert('Exito');
-			}, response => {
-				alert('Error');
-			});
+		return Vue.http.delete(url + 'Business/' + idBusiness);
 	},
 	getBusinessByCode(id){
 		return Vue.http.get(url + 'BusinessByCode/' + id);
 	},
 	addOwner(newOwner,idBusiness){
-		Vue.http.put(url + 'addBusinessOwner/' + idBusiness,newOwner).then(
-			response => {
-				alert('Exito');
-			}, response => {
-				alert('Error');
-			});
+		return Vue.http.put(url + 'addBusinessOwner/' + idBusiness,newOwner);
 	},
 	removeOwner(deletedOwner,idBusiness){
-		Vue.http.put(url + 'removeBusinessOwner/' + idBusiness,deletedOwner).then(
-			response => {
-				alert('Exito');
-			}, response => {
-				alert('Error');
-			});
+		return Vue.http.put(url + 'removeBusinessOwner/' + idBusiness,deletedOwner);
 	}, 
 	getBusinessById(idBusiness){
 		return Vue.http.get(url + 'BusinessById/' + idBusiness);
