@@ -10,30 +10,18 @@ export default {
     },
 
     createAdvertisement(newAdvertisement) {
-        Vue.http.post(url + 'createAdvertisement', newAdvertisement).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        Vue.http.post(url + 'Advertisement', newAdvertisement);
     },
 
     editAdvertisement(updatedFields, IDAdvertisement) {
-        Vue.http.put(url + 'editAdvertisement/' + IDAdvertisement, updatedFields).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        })
+        Vue.http.put(url + 'Advertisement/' + IDAdvertisement, updatedFields);
     },
 
     deleteAdvertisement(IDAdvertisement) {
-        Vue.http.delete(url + 'deleteAdvertisement/' + IDAdvertisement).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        })
+        Vue.http.delete(url + 'Advertisement/' + IDAdvertisement);
     },
 
     getAdvertisementByName(AdvertisementByName) {
-        return Vue.http.get(url + 'getAdvertisementByName/' + AdvertisementByName);
+        return Vue.http.get(url + 'AdvertisementByName/' + AdvertisementByName);
     },
 }

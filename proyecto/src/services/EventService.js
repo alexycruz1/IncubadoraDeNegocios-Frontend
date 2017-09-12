@@ -10,19 +10,11 @@ export default {
     },
 
     createEvent(newEvent) {
-        Vue.http.post(url + 'createEvent', newEvent).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        Vue.http.post(url + 'Event', newEvent);
     },
 
     deleteEvent(IDEvent) {
-        Vue.http.delete(url + 'Event/' + IDEvent).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        })
+        Vue.http.delete(url + 'Event/' + IDEvent);
     },
 
     getEventByName(eventByName) {
@@ -34,26 +26,14 @@ export default {
     },
 
     editEvent(updatedFields, IDEvent) {
-        Vue.http.put(url + 'Event/' + IDEvent, updatedFields).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        })
+        Vue.http.put(url + 'Event/' + IDEvent, updatedFields);
     },
 
     addPersonToEvent(newPerson, IDEvent) {
-        Vue.http.put(url + 'PersonToEvent/' + IDEvent, newPerson).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
+        Vue.http.put(url + 'PersonToEvent/' + IDEvent, newPerson);
     },
 
     deletePersonInEvent(person, IDEvent) {
-        Vue.http.put(url + 'PersonInEvent/' + IDEvent, person).then(response => {
-            alert('Exito');
-        }, response => {
-            alert('Error');
-        });
-    },
+        Vue.http.put(url + 'PersonInEvent/' + IDEvent, person);
+    }
 }
