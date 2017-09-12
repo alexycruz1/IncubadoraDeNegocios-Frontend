@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import Hello from './components/Hello.vue'
 import Profile from './components/Profile.vue'
+import Groups from './components/Groups.vue'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -19,6 +20,11 @@ const router = new VueRouter({
 		path: '/profile',
 		name: 'profile',
 		component: Profile
+	},
+	{
+		path: '/groups',
+		name: 'groups',
+		component: Groups
 	}
 	]
 });

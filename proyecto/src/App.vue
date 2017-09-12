@@ -21,13 +21,38 @@
     		</a>
 
     		<div class="right menu">
-    			<div  id = "dropMenu" class="ui dropdown item" >
+    			<div  id = "dropMenu" class="ui pointing dropdown link item" >
       				Actividades <i class="dropdown icon" v-on:click = "showMenu()"></i>
-      				<div class="menu">
-        				<a class="item">Grupos</a>
-        				<a class="item">Eventos</a>
-        				<a class="item">Tareas</a>
-        				<a class = "item">Mensajes</a>
+      				<div class="ui inverted menu">
+                
+                <a class = "item">
+                  <router-link to = '/groups'>
+                    <div class = "ui black tag label">
+                      Grupos
+                    </div>
+                    </router-link>
+                </a>
+                <a class = "item">
+                  <router-link to = '/'>
+                    <div class = "ui black tag label">
+                      Eventos
+                    </div>
+                    </router-link>
+                </a>
+                <a class = "item">
+                  <router-link to = '/'>
+                    <div class = "ui black tag label">
+                      Tareas
+                    </div>
+                    </router-link>
+                </a>
+                <a class = "item">
+                  <router-link to = '/'>
+                    <div class = "ui black tag label">
+                      Mensajes
+                    </div>
+                    </router-link>
+                </a>
       				</div>
     			</div>
    			 </div>
@@ -83,3 +108,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  a,router-link{
+    color: black;
+  }
+  .item{
+    color: black;
+  }
+</style>
