@@ -7,7 +7,7 @@
 					Perfil Personal
 				</div>
 				
-				<div class = "ui fluid card" v-for = "user of users">
+				<div class = "ui fluid card">
 					<div class="image">
       					<img v-bind:src="user.image">
     				</div>
@@ -200,29 +200,14 @@
 	var person;
 
 	
-	
-	personService.getPersonById(3).then(response => {
-				people.push(response.body[0]);
-				person = response.body[0];
-				for(let i = 0; i < person.listOfBusiness.length; i++){
-				businessService.getBusinessById(person.listOfBusiness[i]).then(
-					response =>{
-					business.push(response.body[0]);
-				}, response => {
-					alert('Error');
-				});
-			}
-			},response => {
-				alert('Error');
-			});
-	
+
 	export default {
 		name: 'profile',
 		data(){
 			return {
 				allUsers: [],
-				listOfBusiness: business,
-				users: people,
+				listOfBusiness: [],
+				user: {},
 				currentBusiness: Object,
 				currentUser:Object,
 				newOwner: Object
@@ -284,14 +269,14 @@
 				});
 			},
 			modifyUser(){
-				personService.editPerson(this.currentUser,this.users[0].IDPerson).then(response=>{
+				personService.editPerson(this.currentUser,this.user.IDPerson).then(response=>{
 					alert('Exito');
 				}, response => {
 					alert('Error');
 				});
 			},
 			deleteBusinessFromList(){
-				var obj = [{business: this.currentBusiness.idBusiness},{owner:this.users[0].IDPerson}];
+				var obj = [{business: this.currentBusiness.idBusiness},{owner:this.user.IDPerson}];
 
 				businessService.removeOwner(obj[1],this.currentBusiness.idBusiness).then(response=>{
 					alert('Exito');
@@ -299,7 +284,7 @@
 					alert('Error');
 				});
 
-				personService.deleteBusiness(obj[0],this.users[0].IDPerson).then(response=>{
+				personService.deleteBusiness(obj[0],this.user.IDPerson).then(response=>{
 					alert('Exito');
 				}, response => {
 					alert('Error');
@@ -309,13 +294,11 @@
 			}, 
 			refreshCards(){
 				personService.getPersonById(this.users[0].IDPerson).then(response => {
-					business = [];
 					this.listOfBusiness = [];
-					person = response.body[0];
-					for(let i = 0; i < person.listOfBusiness.length; i++){
-					businessService.getBusinessById(person.listOfBusiness[i]).then(
+					this.user = response.body[0];
+					for(let i = 0; i < this.user.listOfBusiness.length; i++){
+					businessService.getBusinessById(this.user.listOfBusiness[i]).then(
 					response =>{
-						business.push(response.body[0]);
 						this.listOfBusiness.push(response.body[0]);
 					}, response => {
 						alert('Error');
@@ -325,8 +308,23 @@
 					alert('Error');
 				});
 			}
+		},
+		beforeCreate(){
+			personService.getPersonById(3).then(response => {
+				this.user = response.body[0];
+				for(let i = 0; i < this.user.listOfBusiness.length; i++){
+				businessService.getBusinessById(this.user.listOfBusiness[i]).then(
+					response =>{
+					this.listOfBusiness.push(response.body[0]);
+				}, response => {
+					alert('Error');
+				});
+			}
+			},response => {
+				alert('Error');
+			});
 		}
-	}
+	}	
 </script>
 <style scoped>
 	h1{

@@ -7,7 +7,7 @@
 					Mis Grupos
 				</div>
 				<div class = "ui two cards">
-					<div class = "ui fluid card" v-for = "group of groups" v-on:click = "showGroupInfo(group)">
+					<div class = "ui fluid card" v-for = "group in groups" >
 						<div class = "image">
 							<img v-bind:src="group.image">
 						</div>
@@ -17,6 +17,13 @@
 								<a>{{group.state}}</a>
 							</div>
 						</div>
+						<div class="extra content">
+      						<div class="ui two buttons">
+        						<div class="ui basic green button"
+        						v-on:click = "showGroupInfo(group)">Info</div>
+        						<div class="ui basic red button" v-on:click = "quitGroup(group)">Eliminar</div>
+      						</div>
+    					</div>
 					</div>
 				</div>
 			</div>
@@ -58,6 +65,7 @@
 									{{event.name}}
 								</div>
 							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -73,30 +81,12 @@
 	import personService from './../services/personServices'
 	import eventService from './../services/EventService'
 	
-	var loggedUser = [];
-	var allUserGroups = [];
-
-	personService.getPersonById(3).then(response => {
-		loggedUser.push(response.body[0]);
-
-		for(let i = 0; i < loggedUser[0].listOfGroups.length; i++){
-			groupService.getGroupById(loggedUser[0].listOfGroups[i]).then(response => {
-				allUserGroups.push(response.body[0]);
-			}, response => {
-				alert('Error getting group');
-			});
-		}
-
-	}, response => {
-		alert('Error');
-	})
-
 	export default{
 		name: 'groups', 
 		data(){
 			return {
-				user: loggedUser,
-				groups: allUserGroups,
+				user:{},
+				groups: [],
 				currentGroup: Object,
 				usersOfCurrentGroup: [],
 				eventsOfCurrentGroup: [],
@@ -104,10 +94,45 @@
 			}
 		}, 
 		methods:{
+			quitGroup(elementG){
+				personService.deleteGroup({group: elementG.idGroup},this.user.IDPerson).then(response => {
+					groupService.removeMember({member: this.user.IDPerson},elementG.idGroup).then(response => {
+					}, response => {
+						alert('Error');
+					});
+
+					alert('Exito');
+					}, response => {
+						alert('Error');
+					});
+					this.refreshCards();
+			},
+			refreshCards(){
+				this.user = {};
+				this.groups = [];
+				this.usersOfCurrentGroup = [];
+				this.eventsOfCurrentGroup = [];
+
+				personService.getPersonById(3).then(response => {
+				this.user = response.body[0];
+
+			for(let i = 0; i < this.user.listOfGroups.length; i++){
+				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {
+					this.groups.push(response.body[0]);
+				}, response => {
+					alert('Error getting group');
+				});
+			}
+
+			}, response => {
+				alert('Error');
+			});
+			},
 			showGroupInfo(element){
 				this.usersOfCurrentGroup = [];
 				this.eventsOfCurrentGroup = [];
 				this.currentGroup = element;
+				
 				//Get Members
 				for(let i = 0; i < element.members.length; i++){
 					personService.getPersonById(element.members[i]).then(response =>{
@@ -127,6 +152,22 @@
 					});
 				}
 			}
+		},
+		beforeCreate(){
+			personService.getPersonById(3).then(response => {
+			this.user = response.body[0];
+
+			for(let i = 0; i < this.user.listOfGroups.length; i++){
+				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {
+					this.groups.push(response.body[0]);
+				}, response => {
+					alert('Error getting group');
+				});
+			}
+
+			}, response => {
+				alert('Error');
+			});
 		}
 	}
 </script>
