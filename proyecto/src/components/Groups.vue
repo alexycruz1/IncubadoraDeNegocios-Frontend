@@ -67,7 +67,7 @@
 					<div class = "ui top attached label">
 						Eventos
 						<div class = "ui right floated icon buttons">
-							<button class = "ui blue button">
+							<button class = "ui blue button" v-on:click = "showCreateEventModal()">
 								<i class = "plus icon"></i>	
 							</button>
 						</div>
@@ -195,6 +195,49 @@
     			</div>
 			</div>
 		</div>
+		<div class = "ui modal" id = "createEvent">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Creacion de Eventos
+			</div>
+			<div class = "ui center aligned grid">
+				<div class = "seven wide column">
+					<div class = "ui medium image">
+						<img src="img/fondo2.jpg">
+					</div>
+				</div>
+				<div class = "seven wide column">
+				<br><br><br>
+					<div class = "ui form">
+						<div class = "field">
+							<label>Nombre: </label>
+							<input type="text" placeholder= "nombre" v-model = "event.name">
+						</div>
+						<div class = "field">
+							<label>Estado: </label>
+							<input type="text" placeholder= "estado" v-model  = "event.state">
+						</div>
+						<div class = "field">
+							<label>descripcion: </label>
+							<input type="text" placeholder= "Descripcion" v-model  = "event.description">
+						</div>
+						<div class = "field">
+							<label>Fecha: </label>
+							<input type="text" placeholder= "Fecha" v-model  = "event.dateAndTime">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "createEvent()">
+      				Crear
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -218,6 +261,13 @@
 					image: 'img/fondo2.jpg', 
 					name: '',
 					state: ''
+				},
+				event: {
+					name: '',
+					description: '',
+					dateAndTime: '', 
+					image: 'img/fondo.jpg',
+					status
 				}
 			}
 		}, 
@@ -270,6 +320,7 @@
 				//Get Events
 				for(let i = 0; i < element.events.length; i++){
 					eventService.getEventByID(element.events[i]).then(response => {
+						console.log('Event: ',response.body[0]);
 						this.eventsOfCurrentGroup.push(response.body[0]);
 					}, response => {
 						alert('Error');
@@ -291,6 +342,9 @@
 			showModifyModal(element){
 				this.currentGroup = element;
 				$('#modify').modal('show');
+			},
+			showCreateEventModal(){
+				$('#createEvent').modal('show');
 			},
 			getAllUsers(){
 				personService.getPeople().then(response => {
@@ -356,6 +410,25 @@
 				}, response => {
 					alert('Error');
 				});
+			},
+			createEvent(){
+				eventService.createEvent(this.event).then(response => {
+						eventService.getEvents().then(response => {
+							groupService.addEvent({event: response.body[response.body.length-1].IDEvent},this.currentGroup.idGroup).then(response => {
+								alert('Agregado');
+							},response => {
+								alert('Error');
+							});
+						}, response => {
+							alert('Error');
+						});
+						
+					alert('Exito');
+					this.refreshCards();
+				}, response => {
+					alert('Error');
+				});
+
 			}
 		},
 		beforeCreate(){

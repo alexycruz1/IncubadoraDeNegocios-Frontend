@@ -10,7 +10,7 @@ export default {
     },
 
     createEvent(newEvent) {
-        Vue.http.post(url + 'Event', newEvent);
+        return Vue.http.post(url + 'createEvent', newEvent);
     },
 
     deleteEvent(IDEvent) {
@@ -26,14 +26,14 @@ export default {
     },
 
     editEvent(updatedFields, IDEvent) {
-        Vue.http.put(url + 'Event/' + IDEvent, updatedFields);
+        return Vue.http.put(url + 'Event/' + IDEvent, updatedFields);
     },
 
     addPersonToEvent(newPerson, IDEvent) {
-        Vue.http.put(url + 'PersonToEvent/' + IDEvent, newPerson);
+        return Vue.http.put(url + 'PersonToEvent/' + IDEvent, newPerson);
     },
 
     deletePersonInEvent(person, IDEvent) {
-        Vue.http.put(url + 'PersonInEvent/' + IDEvent, person);
+        return Vue.http.put(url + 'PersonInEvent/' + IDEvent, person);
     }
 }
