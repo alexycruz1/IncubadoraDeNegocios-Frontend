@@ -6,7 +6,7 @@
 				<div class = "ui big message">
 					Mis Grupos    
 					<div class = "ui right floated icon buttons">
-						<button class = "ui blue button">
+						<button class = "ui blue button" v-on:click = "showCreateGModal()">
 							<i class = "plus icon"></i>	
 						</button>
 					</div>
@@ -107,7 +107,6 @@
  		 		</div>
 			</div>
 		</div>
-
 		<div class = "ui modal" id = "usersModal">
 			<i class = "close icon"></i>
 			<div class = "header">
@@ -124,6 +123,41 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class = "ui modal" id = "create">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Creacion de Grupos
+			</div>
+			<div class = "ui center aligned grid">
+				<div class = "seven wide column">
+					<div class = "ui medium image">
+						<img src="img/fondo2.jpg">
+					</div>
+				</div>
+				<div class = "seven wide column">
+				<br><br><br>
+					<div class = "ui form">
+						<div class = "field">
+							<label>Nombre: </label>
+							<input type="text" placeholder= "nombre" v-model = "newGroup.name">
+						</div>
+						<div class = "field">
+							<label>Estado: </label>
+							<input type="text" placeholder= "estado" v-model  = "newGroup.state">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "createGroup()">
+      				Crear
+      				<i class="checkmark icon"></i>
+    			</div>
 			</div>
 		</div>
 	</div>
@@ -145,7 +179,11 @@
 				eventsOfCurrentGroup: [],
 				showInfo: false,
 				allUsers: [],
-				userToAdd: {}
+				newGroup: {
+					image: 'img/fondo2.jpg', 
+					name: '',
+					state: ''
+				}
 			}
 		}, 
 		methods:{
@@ -216,6 +254,9 @@
 				this.getAllUsers();
 				$('#usersModal').modal('show');
 			},
+			showCreateGModal(){
+				$('#create').modal('show');
+			},
 			getAllUsers(){
 				personService.getPeople().then(response => {
 					for(let i = 0; i < response.body.length; i++){
@@ -251,6 +292,27 @@
 					alert('Error');
 				});
 				$('#usersModal').modal('hide');
+			},
+			createGroup(){
+				groupService.createGroup(this.newGroup).then(response=>{
+					groupService.getAllGroups().then(response => {
+						personService.addGroup({group: response.body[response.body.length -1].idGroup}, this.user.IDPerson).then(response=>{
+							alert('Exito');
+						},response => {
+							alert('Error');
+						});
+						groupService.addMember({member: this.user.IDPerson},response.body[response.body.length -1].idGroup).then(response => {
+							alert('Exito');
+							this.refreshCards();
+						}, response => {
+							alert('Error');
+						});
+					}, response => {
+						alert('Error');
+					});
+				}, response => {
+					alert('Error');
+				});
 			}
 		},
 		beforeCreate(){
