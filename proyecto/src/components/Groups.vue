@@ -25,8 +25,8 @@
 						</div>
 						<div class="extra content">
       						<div class="ui two buttons">
-        						<div class="ui basic green button"
-        						>Info</div>
+        						<div class="ui basic green button" v-on:click = "showModifyModal(group)"
+        						>Modificar</div>
         						<div class="ui basic red button" v-on:click = "showQuitModal(group)">Eliminar</div>
       						</div>
     					</div>
@@ -160,6 +160,41 @@
     			</div>
 			</div>
 		</div>
+		<div class = "ui modal" id = "modify">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Modificacion de Grupos
+			</div>
+			<div class = "ui center aligned grid">
+				<div class = "seven wide column">
+					<div class = "ui medium image">
+						<img src="img/fondo2.jpg">
+					</div>
+				</div>
+				<div class = "seven wide column">
+				<br><br><br>
+					<div class = "ui form">
+						<div class = "field">
+							<label>Nombre: </label>
+							<input type="text" v-bind:value= "currentGroup.name" v-model = "currentGroup.name">
+						</div>
+						<div class = "field">
+							<label>Estado: </label>
+							<input type="text" v-bind:value= "currentGroup.state" v-model  = "currentGroup.state">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "modifyGroup()">
+      				Modificar
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -205,10 +240,8 @@
 				this.user = {};
 				this.groups = [];
 				this.showInfo = false;
-
 				personService.getPersonById(2).then(response => {
 				this.user = response.body[0];
-
 			for(let i = 0; i < this.user.listOfGroups.length; i++){
 				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {
 					this.groups.push(response.body[0]);
@@ -234,11 +267,9 @@
 						alert('Error');
 					});
 				}
-
 				//Get Events
 				for(let i = 0; i < element.events.length; i++){
 					eventService.getEventByID(element.events[i]).then(response => {
-						console.log('Eventos: ', response.body[0]);
 						this.eventsOfCurrentGroup.push(response.body[0]);
 					}, response => {
 						alert('Error');
@@ -256,6 +287,10 @@
 			},
 			showCreateGModal(){
 				$('#create').modal('show');
+			},
+			showModifyModal(element){
+				this.currentGroup = element;
+				$('#modify').modal('show');
 			},
 			getAllUsers(){
 				personService.getPeople().then(response => {
@@ -313,12 +348,19 @@
 				}, response => {
 					alert('Error');
 				});
+			},
+			modifyGroup(){
+				groupService.updateGroup(this.currentGroup, this.currentGroup.idGroup).then(response=>{
+					alert('Exito');
+					this.refreshCards();
+				}, response => {
+					alert('Error');
+				});
 			}
 		},
 		beforeCreate(){
 			personService.getPersonById(2).then(response => {
 			this.user = response.body[0];
-
 			for(let i = 0; i < this.user.listOfGroups.length; i++){
 				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {
 					this.groups.push(response.body[0]);
@@ -326,16 +368,9 @@
 					alert('Error getting group');
 				});
 			}
-
 			}, response => {
 				alert('Error');
 			});
-		},
-		watch: {
-			usersOfCurrentGroup(){
-				//this.refreshCards();
-				//this.showGroupInfo(this.currentGroup);
-			}
 		}
 	}
 </script>
