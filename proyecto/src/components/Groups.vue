@@ -8,7 +8,7 @@
 				</div>
 				<div class = "ui two cards">
 					<div class = "ui fluid card" v-for = "group in groups" >
-						<div class = "image">
+						<div class = "image" v-on:click = "showGroupInfo(group)">
 							<img v-bind:src="group.image">
 						</div>
 						<div class = "content">
@@ -20,7 +20,7 @@
 						<div class="extra content">
       						<div class="ui two buttons">
         						<div class="ui basic green button"
-        						v-on:click = "showGroupInfo(group)">Info</div>
+        						>Info</div>
         						<div class="ui basic red button" v-on:click = "quitGroup(group)">Eliminar</div>
       						</div>
     					</div>
