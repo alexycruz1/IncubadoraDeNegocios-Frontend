@@ -10,15 +10,15 @@ export default {
     },
 
     createAdvertisement(newAdvertisement) {
-        Vue.http.post(url + 'Advertisement', newAdvertisement);
+        return Vue.http.post(url + 'Advertisement', newAdvertisement);
     },
 
     editAdvertisement(updatedFields, IDAdvertisement) {
-        Vue.http.put(url + 'Advertisement/' + IDAdvertisement, updatedFields);
+        return Vue.http.put(url + 'Advertisement/' + IDAdvertisement, updatedFields);
     },
 
     deleteAdvertisement(IDAdvertisement) {
-        Vue.http.delete(url + 'Advertisement/' + IDAdvertisement);
+        return Vue.http.delete(url + 'Advertisement/' + IDAdvertisement);
     },
 
     getAdvertisementByName(AdvertisementByName) {

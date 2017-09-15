@@ -10,11 +10,11 @@ export default {
     },
 
     createChat(newChat) {
-        Vue.http.post(url + 'Chat', newChat);
+        return Vue.http.post(url + 'Chat', newChat);
     },
 
     deleteChat(IDChat) {
-        Vue.http.delete(url + 'Chat/' + IDChat);
+        return Vue.http.delete(url + 'Chat/' + IDChat);
     },
     
     getChatByID(chatByID) {
@@ -22,18 +22,18 @@ export default {
     },
 
     addPersonToChat(newPerson, IDChat) {
-        Vue.http.put(url + 'PersonToChat/' + IDChat, newPerson);
+        return Vue.http.put(url + 'PersonToChat/' + IDChat, newPerson);
     },
 
     deletePersonInChat(person, IDChat) {
-        Vue.http.put(url + 'PersonInChat/' + IDChat, person);
+        return Vue.http.put(url + 'PersonInChat/' + IDChat, person);
     },
 
     addMessageToChat(newMessage, IDChat) {
-        Vue.http.put(url + 'MessageToChat/' + IDChat, newMessage);
+        return Vue.http.put(url + 'MessageToChat/' + IDChat, newMessage);
     },
 
     deleteMessageInChat(message, IDChat) {
-        Vue.http.put(url + 'MessageInChat/' + IDChat, message);
+        return Vue.http.put(url + 'MessageInChat/' + IDChat, message);
     }
 }
