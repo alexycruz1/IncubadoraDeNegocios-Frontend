@@ -4,7 +4,13 @@
 			<div class = "one wide column"></div>
 			<div class = "six wide column">
 				<div class = "ui big message">
-					Mis Grupos
+					Mis Grupos    
+					<div class = "ui right floated icon buttons">
+						<button class = "ui blue button">
+							<i class = "plus icon"></i>	
+						</button>
+					</div>
+					
 				</div>
 				<div class = "ui two cards">
 					<div class = "ui fluid card" v-for = "group in groups" >
@@ -21,7 +27,7 @@
       						<div class="ui two buttons">
         						<div class="ui basic green button"
         						>Info</div>
-        						<div class="ui basic red button" v-on:click = "quitGroup(group)">Eliminar</div>
+        						<div class="ui basic red button" v-on:click = "showQuitModal(group)">Eliminar</div>
       						</div>
     					</div>
 					</div>
@@ -34,10 +40,16 @@
 				<div class = "ui big message">
 					Informacion de Grupo
 				</div>
-				<div class = "ui fluid floated segment">
+				<div class = "ui fluid floated segment" v-show = "showInfo">
 					<div class = "ui top attached label">
 						Miembros
+						<div class = "ui right floated icon buttons">
+							<button class = "ui blue button" v-on:click = "showUsersModal()">
+								<i class = "plus icon"></i>	
+							</button>
+						</div>
 					</div>
+					<br><br><br>
 					<div class = "ui two cards">
 						<div class = "ui fluid card" v-for = "user in usersOfCurrentGroup">
 							<div class = "ui fluid image">
@@ -51,10 +63,16 @@
 						</div>
 					</div>
 				</div>
-				<div class = "ui fluid floated segment">
+				<div class = "ui fluid floated segment" v-show = "showInfo">
 					<div class = "ui top attached label">
 						Eventos
+						<div class = "ui right floated icon buttons">
+							<button class = "ui blue button">
+								<i class = "plus icon"></i>	
+							</button>
+						</div>
 					</div>
+					<br><br><br>
 					<div class = "ui two cards">
 						<div class = "ui fluid card" v-for = "event in eventsOfCurrentGroup">
 							<div class = "ui fluid image">
@@ -73,6 +91,41 @@
 			<div class = "one wide column"></div>	
 			</div>
 			<br>
+
+		<div class = "ui mini modal" id = "quit">
+			<i class = "close icon"></i>
+			<div class = "header">Desea Eliminar?</div>
+			<div class = "extra content">
+				<div class="actions">
+    				<div class="ui black deny button">
+      					Cancelar
+    				</div>
+    				<div class="ui red right labeled icon button" v-on:click = "quitGroup()">
+      					Eliminar
+      					<i class="checkmark icon"></i>
+    				</div>
+ 		 		</div>
+			</div>
+		</div>
+
+		<div class = "ui modal" id = "usersModal">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Seleccione un usuario
+			</div>
+			<div class = "content">
+				<div class = "ui four cards">
+					<div class = "red card" v-for = "u in allUsers" v-on:click = "addMember(u)">
+						<div class = image>
+							<img v-bind:src="u.image">
+						</div>
+						<div class = "center aligned content">
+							{{u.name}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -90,18 +143,21 @@
 				currentGroup: Object,
 				usersOfCurrentGroup: [],
 				eventsOfCurrentGroup: [],
-				showInfo: false
+				showInfo: false,
+				allUsers: [],
+				userToAdd: {}
 			}
 		}, 
 		methods:{
-			quitGroup(elementG){
-				personService.deleteGroup({group: elementG.idGroup},this.user.IDPerson).then(response => {
-					groupService.removeMember({member: this.user.IDPerson},elementG.idGroup).then(response => {
+			quitGroup(){
+				this.showInfo = false;
+				personService.deleteGroup({group: this.currentGroup.idGroup},this.user.IDPerson).then(response => {
+					alert('Exito');
 					}, response => {
 						alert('Error');
 					});
-
-					alert('Exito');
+				groupService.removeMember({member: this.user.IDPerson},this.currentGroup.idGroup).then(response => {
+						alert('Exitos');
 					}, response => {
 						alert('Error');
 					});
@@ -110,10 +166,9 @@
 			refreshCards(){
 				this.user = {};
 				this.groups = [];
-				this.usersOfCurrentGroup = [];
-				this.eventsOfCurrentGroup = [];
+				this.showInfo = false;
 
-				personService.getPersonById(3).then(response => {
+				personService.getPersonById(2).then(response => {
 				this.user = response.body[0];
 
 			for(let i = 0; i < this.user.listOfGroups.length; i++){
@@ -123,12 +178,12 @@
 					alert('Error getting group');
 				});
 			}
-
 			}, response => {
 				alert('Error');
 			});
 			},
 			showGroupInfo(element){
+				this.showInfo = true;
 				this.usersOfCurrentGroup = [];
 				this.eventsOfCurrentGroup = [];
 				this.currentGroup = element;
@@ -151,10 +206,55 @@
 						alert('Error');
 					});
 				}
+			},
+			showQuitModal(element){
+				this.currentGroup = element;
+				$('#quit').modal('show');
+			},
+			showUsersModal(){
+				this.allUsers = [];
+				this.getAllUsers();
+				$('#usersModal').modal('show');
+			},
+			getAllUsers(){
+				personService.getPeople().then(response => {
+					for(let i = 0; i < response.body.length; i++){
+						if(!this.verifyId(response.body[i].IDPerson)){
+							this.allUsers.push(response.body[i]);
+						}else{
+							console.log('Ya esta');
+						}
+					}
+				}, response => {
+					alert('Error');
+				});
+			},
+			verifyId(id){
+				for(let i = 0; i < this.currentGroup.members.length; i++){
+					if(id === this.currentGroup.members[i]){
+						return true;
+					}
+				}
+				return false;
+			}, 
+			addMember(element){
+				this.usersOfCurrentGroup = [];
+				personService.addGroup({group: this.currentGroup.idGroup}, element.IDPerson).then(response => {
+					alert('Exito');
+				}, response => {
+					alert('Error');
+				});
+				groupService.addMember({member: element.IDPerson},this.currentGroup.idGroup).then(response => {
+					alert('Exito');
+					this.refreshCards();
+				}, response => {
+					alert('Error');
+				});
+				$('#usersModal').modal('hide');
 			}
 		},
 		beforeCreate(){
-			personService.getPersonById(3).then(response => {
+			personService.getPersonById(2).then(response => {
 			this.user = response.body[0];
 
 			for(let i = 0; i < this.user.listOfGroups.length; i++){
@@ -168,6 +268,12 @@
 			}, response => {
 				alert('Error');
 			});
+		},
+		watch: {
+			usersOfCurrentGroup(){
+				//this.refreshCards();
+				//this.showGroupInfo(this.currentGroup);
+			}
 		}
 	}
 </script>
