@@ -9,6 +9,7 @@
 						<button class = "ui blue button" v-on:click = "showCreateGModal()">
 							<i class = "plus icon"></i>	
 						</button>
+						<div class = "ui vertical divider"></div>
 						<button class = "ui blue button" v-on:click = "showGroupsModal()">
 							<i class = "search icon"></i>	
 						</button>
@@ -30,7 +31,7 @@
       						<div class="ui two buttons">
         						<div class="ui basic green button" v-on:click = "showModifyModal(group)"
         						>Modificar</div>
-        						<div class="ui basic red button" v-on:click = "showQuitModal(group)">Eliminar</div>
+        						<div class="ui basic red button" v-on:click = "showQuitModal(group)">Salir</div>
       						</div>
     					</div>
 					</div>
