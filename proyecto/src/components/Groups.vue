@@ -9,6 +9,9 @@
 						<button class = "ui blue button" v-on:click = "showCreateGModal()">
 							<i class = "plus icon"></i>	
 						</button>
+						<button class = "ui blue button" v-on:click = "showGroupsModal()">
+							<i class = "search icon"></i>	
+						</button>
 					</div>
 					
 				</div>
@@ -305,6 +308,24 @@
     			</div>
 			</div>
 		</div>
+		<div class = "ui modal" id = "groupsModal">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Seleccione un grupo
+			</div>
+			<div class = "content">
+				<div class = "ui four cards">
+					<div class = "red card" v-for = "g in allGroups" v-on:click = "addGroup(g)">
+						<div class = image>
+							<img v-bind:src="g.image">
+						</div>
+						<div class = "center aligned content">
+							{{g.name}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -324,6 +345,7 @@
 				eventsOfCurrentGroup: [],
 				showInfo: false,
 				allUsers: [],
+				allGroups: [],
 				newGroup: {
 					image: 'img/fondo2.jpg', 
 					name: '',
@@ -348,10 +370,10 @@
 					});
 				groupService.removeMember({member: this.user.IDPerson},this.currentGroup.idGroup).then(response => {
 						alert('Exitos');
+						this.refreshCards();
 					}, response => {
 						alert('Error');
 					});
-					this.refreshCards();
 			},
 			refreshCards(){
 				this.user = {};
@@ -387,7 +409,6 @@
 				//Get Events
 				for(let i = 0; i < element.events.length; i++){
 					eventService.getEventByID(element.events[i]).then(response => {
-						console.log('Event: ',response.body[0]);
 						this.eventsOfCurrentGroup.push(response.body[0]);
 					}, response => {
 						alert('Error');
@@ -402,6 +423,11 @@
 				this.allUsers = [];
 				this.getAllUsers();
 				$('#usersModal').modal('show');
+			},
+			showGroupsModal(){
+				this.allGroups = [];
+				this.getAllGroups();
+				$('#groupsModal').modal('show');
 			},
 			showCreateGModal(){
 				$('#create').modal('show');
@@ -526,6 +552,41 @@
 				}, response => {
 					alert('Error');
 				});
+			},
+			getAllGroups(){
+				groupService.getAllGroups().then(response => {
+					for(let i = 0; i < response.body.length; i++){
+						if(!this.verifyGroups(response.body[i])){
+							this.allGroups.push(response.body[i]);
+						}
+					}
+				}, response => {
+					alert('Error');
+				});
+			}, 
+			verifyGroups(element){
+				for(let i = 0; i < this.user.listOfGroups.length; i++){
+					if(element.idGroup === this.user.listOfGroups[i] || 
+						element.state === 'private'){
+						return true;
+					}
+				}
+				return false;
+			}, 
+			addGroup(element){
+				groupService.addMember({member: this.user.IDPerson}, element.idGroup).then(response => {
+					alert('Exito');
+				}, response => {
+					alert('Error');
+				});
+
+				personService.addGroup({group: element.idGroup}, this.user.IDPerson).then(response => {
+					alert('Exito');
+					this.refreshCards();
+				}, response => {
+					alert('Error');
+				});
+				$('#groupsModal').modal('hide');
 			}
 		},
 		beforeCreate(){
