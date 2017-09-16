@@ -7,6 +7,7 @@ import App from './App.vue'
 import Hello from './components/Hello.vue'
 import Profile from './components/Profile.vue'
 import Groups from './components/Groups.vue'
+import Tasks from './components/Tasks.vue'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -25,6 +26,11 @@ const router = new VueRouter({
 		path: '/groups',
 		name: 'groups',
 		component: Groups
+	},
+	{
+		path: '/tasks',
+		name: 'tasks', 
+		component: Tasks
 	}
 	]
 });

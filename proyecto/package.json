@@ -20,9 +20,12 @@
     "vue": "vue/dist/vue.common.js"
   },
   "dependencies": {
+    "moment": "^2.18.1",
+    "momentjs": "^2.0.0",
+    "semantic-ui-calendar": "0.0.8",
     "vue": "^2.0.1",
-    "vue-router": "*", 
-    "vue-cli": "*"
+    "vue-cli": "*",
+    "vue-router": "*"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",

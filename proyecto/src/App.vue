@@ -40,7 +40,7 @@
                     </router-link>
                 </a>
                 <a class = "item">
-                  <router-link to = '/'>
+                  <router-link to = '/tasks'>
                     <div class = "ui black tag label">
                       Tareas
                     </div>
