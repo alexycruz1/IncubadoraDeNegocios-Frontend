@@ -88,7 +88,7 @@
 							</div>
 							<div class="extra content">
       							<div class="ui two buttons">
-        							<div class="ui basic green button" v-on:click = ""
+        							<div class="ui basic green button" v-on:click = "showModifyEventModal(event)"
         							>Modificar</div>
         							<div class="ui basic red button" v-on:click = "showDeleteEventModal(event)">Eliminar</div>
       							</div>
@@ -224,7 +224,7 @@
 						</div>
 						<div class = "field">
 							<label>Estado: </label>
-							<input type="text" placeholder= "estado" v-model  = "event.state">
+							<input type="text" placeholder= "estado" v-model  = "event.status">
 						</div>
 						<div class = "field">
 							<label>descripcion: </label>
@@ -262,6 +262,49 @@
  		 		</div>
 			</div>
 		</div>
+		<div class = "ui modal" id = "modifyEvent">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Modificacion de Eventos
+			</div>
+			<div class = "ui center aligned grid">
+				<div class = "seven wide column">
+					<div class = "ui medium image">
+						<img src="img/fondo2.jpg">
+					</div>
+				</div>
+				<div class = "seven wide column">
+				<br><br><br>
+					<div class = "ui form">
+						<div class = "field">
+							<label>Nombre: </label>
+							<input type="text" v-bind:value = "event.name" v-model = "event.name">
+						</div>
+						<div class = "field">
+							<label>Estado: </label>
+							<input type="text" v-bind:value= "event.status" v-model  = "event.status">
+						</div>
+						<div class = "field">
+							<label>descripcion: </label>
+							<input type="text" v-bind:value= "event.description" v-model  = "event.description">
+						</div>
+						<div class = "field">
+							<label>Fecha: </label>
+							<input type="text" v-bind:value= "event.dateAndTime" v-model  = "event.dateAndTime">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "modifyEvent()">
+      				Modificar
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -291,7 +334,7 @@
 					description: '',
 					dateAndTime: '', 
 					image: 'img/fondo.jpg',
-					status
+					status: ''
 				}
 			}
 		}, 
@@ -370,9 +413,14 @@
 			showCreateEventModal(){
 				$('#createEvent').modal('show');
 			},
+
 			showDeleteEventModal(element){
 				this.event = element;
 				$('#quitEvent').modal('show');
+			},
+			showModifyEventModal(element){
+				this.event = element;
+				$('#modifyEvent').modal('show');
 			},
 			getAllUsers(){
 				personService.getPeople().then(response => {
@@ -470,6 +518,14 @@
 				},response => {
 					alert('Error');
 				})
+			},
+			modifyEvent(){
+				eventService.editEvent(this.event,this.event.IDEvent).then(response => {
+					alert('Exito');
+					this.refreshCards();
+				}, response => {
+					alert('Error');
+				});
 			}
 		},
 		beforeCreate(){
