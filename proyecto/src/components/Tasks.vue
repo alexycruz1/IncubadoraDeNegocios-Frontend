@@ -30,6 +30,73 @@
 			<div class = "one wide column"></div>	
 		</div>
 		<br>
+		<div class = "ui mini modal" id = "newTaskModal">
+			<i class = "close icon"></i>
+			<div class = "header">Creacion de Tareas</div>
+			<br>
+			<div class= "ui form">
+				<div class = "field">
+					<label>Actividad</label>
+					<input type="text" v-model =  "task.activity">
+				</div>
+				<div class = "field">
+					<label>Estado</label>
+					<input type="text" v-model = "task.state">
+				</div>
+			</div>
+			<br>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "createTask()">
+      				Crear
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>	
+		</div>
+		<div class = "ui mini modal" id = "options">
+			<i class = "close icon"></i>
+			<div class = "header">Opciones</div>
+			<div class = "actions">
+				<div class="ui black deny button" v-on:click = "deleteTask()">
+      				Eliminar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "showModifyTaskModal()">
+      				Modificar
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>
+		</div>
+		<div class = "ui mini modal" id = "modifyTaskModal">
+			<i class = "close icon"></i>
+			<div class = "header">Modificacion de Tareas</div>
+			<br>
+			<div class= "ui form">
+				<div class = "field">
+					<label>Actividad</label>
+					<input type="text" v-bind:value = "task.activity" v-model =  "task.activity">
+				</div>
+				<div class = "field">
+					<label>Estado</label>
+					<input type="text" v-bind:value = "task.state" v-model = "task.state">
+				</div>
+				<div class = "field">
+					<label>Fecha</label>
+					<input type="text" v-bind:value = "task.date" v-model = "task.date">
+				</div>
+			</div>
+			<br>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "modifyTask()">
+      				Modificar
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>	
+		</div>
 	</div>
 </template>
 
@@ -44,13 +111,28 @@
 			return {
 				user: {},
 				myBusiness: [],
-				currentTasks: []
+				currentTasks: [],
+				realTasks: [],
+				task: {
+					activity : '',
+					date: '',
+					state: '',
+					idAdviser: 0,
+					idBusiness: 0
+				},
+				showButton:false,
+				currentBusiness:{}
 			}
 		},
 		methods: {
 			show(element){
+				this.showButton = true;
 				this.currentTasks = [];
+				this.realTasks = [];
+				this.currentBusiness = element;
+
 				taskService.getTasksByBusiness(element.idBusiness).then(response => {
+					this.realTasks = response.body;
 						for(let i = 0; i < response.body.length; i++){
 								this.currentTasks.push({
 									title: response.body[i].activity,
@@ -67,13 +149,59 @@
 							},
 							navlinks: true,
 							editable: true,
-							events: this.currentTasks
+							events: this.currentTasks,
+							eventClick: this.showOptions,
+							dayClick: this.showNewTaskModal
 						});
 				}, response =>{
 					alert('Error');
 				});
-				
-
+			},
+			showNewTaskModal(date){
+				console.log(date.format('YYYY/MM/DD'));
+				this.task.date = date.format('YYYY/MM/DD');
+				$('#newTaskModal').modal('show');
+			},
+			showModifyTaskModal(){
+				$('#modifyTaskModal').modal('show');
+			},
+			showOptions(event){
+				for(let i = 0; i < this.realTasks.length; i++){
+					if(event.title === this.realTasks[i].activity && (event.start.format('YYYY-MM-DD') + 'T06:00:00.000Z') === this.realTasks[i].date){
+						this.task = this.realTasks[i];
+					}
+				}
+				$('#options').modal('show');
+			},
+			createTask(){
+				this.task.idAdviser = this.user.IDPerson;
+				this.task.idBusiness = this.currentBusiness.idBusiness;
+				taskService.createTask(this.task).then(response => {
+					alert('Guardado');
+					this.setTasks();
+				},response => {
+					alert('Error');
+				});
+			},
+			setTasks(){
+				$('#calendar').fullCalendar('destroy');
+				this.show(this.currentBusiness);
+			},
+			deleteTask(){
+				taskService.deleteTask(this.task.idTask).then(response => {
+					alert('Exito');
+					this.setTasks();
+				}, response => {
+					alert('Error');
+				})
+			},
+			modifyTask(){
+				taskService.updateTask(this.task,this.task.idTask).then(response => {
+					alert('Exito');
+					this.setTasks();
+				}, response => {
+					alert('Error');
+				})
 			}
 		},
 		beforeCreate(){
