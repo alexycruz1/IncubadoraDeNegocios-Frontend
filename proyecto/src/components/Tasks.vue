@@ -37,11 +37,11 @@
 			<div class= "ui form">
 				<div class = "field">
 					<label>Actividad</label>
-					<input type="text" v-model =  "task.activity">
+					<input type="text" placeholder = "Actividad" v-model =  "task.activity">
 				</div>
 				<div class = "field">
 					<label>Estado</label>
-					<input type="text" v-model = "task.state">
+					<input type="text" placeholder = "Estado" v-model = "task.state">
 				</div>
 			</div>
 			<br>
@@ -158,6 +158,8 @@
 				});
 			},
 			showNewTaskModal(date){
+				this.task.activity = '';
+				this.task.state = '';
 				console.log(date.format('YYYY/MM/DD'));
 				this.task.date = date.format('YYYY/MM/DD');
 				$('#newTaskModal').modal('show');
@@ -168,6 +170,7 @@
 			showOptions(event){
 				for(let i = 0; i < this.realTasks.length; i++){
 					if(event.title === this.realTasks[i].activity && (event.start.format('YYYY-MM-DD') + 'T06:00:00.000Z') === this.realTasks[i].date){
+						console.log('Entra: ', this.realTasks[i]);
 						this.task = this.realTasks[i];
 					}
 				}
