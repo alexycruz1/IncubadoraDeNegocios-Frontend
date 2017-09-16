@@ -14,7 +14,7 @@ export default {
     },
 
     deleteEvent(IDEvent) {
-        Vue.http.delete(url + 'Event/' + IDEvent);
+        return Vue.http.delete(url + 'Event/' + IDEvent);
     },
 
     getEventByName(eventByName) {

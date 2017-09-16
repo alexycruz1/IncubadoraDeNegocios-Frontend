@@ -82,8 +82,17 @@
 								<div class = "header">
 									{{event.name}}
 								</div>
+								<div class = "meta">
+									{{event.dateAndTime}}
+								</div>
 							</div>
-							
+							<div class="extra content">
+      							<div class="ui two buttons">
+        							<div class="ui basic green button" v-on:click = ""
+        							>Modificar</div>
+        							<div class="ui basic red button" v-on:click = "showDeleteEventModal(event)">Eliminar</div>
+      							</div>
+    						</div>
 						</div>
 					</div>
 				</div>
@@ -238,6 +247,21 @@
     			</div>
 			</div>
 		</div>
+		<div class = "ui mini modal" id = "quitEvent">
+			<i class = "close icon"></i>
+			<div class = "header">Desea Eliminar?</div>
+			<div class = "extra content">
+				<div class="actions">
+    				<div class="ui black deny button">
+      					Cancelar
+    				</div>
+    				<div class="ui red right labeled icon button" v-on:click = "deleteEvent()">
+      					Eliminar
+      					<i class="checkmark icon"></i>
+    				</div>
+ 		 		</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -346,6 +370,10 @@
 			showCreateEventModal(){
 				$('#createEvent').modal('show');
 			},
+			showDeleteEventModal(element){
+				this.event = element;
+				$('#quitEvent').modal('show');
+			},
 			getAllUsers(){
 				personService.getPeople().then(response => {
 					for(let i = 0; i < response.body.length; i++){
@@ -416,6 +444,7 @@
 						eventService.getEvents().then(response => {
 							groupService.addEvent({event: response.body[response.body.length-1].IDEvent},this.currentGroup.idGroup).then(response => {
 								alert('Agregado');
+								this.refreshCards();
 							},response => {
 								alert('Error');
 							});
@@ -424,11 +453,23 @@
 						});
 						
 					alert('Exito');
-					this.refreshCards();
 				}, response => {
 					alert('Error');
 				});
 
+			},
+			deleteEvent(){
+				eventService.deleteEvent(this.event.IDEvent).then(response => {
+					alert('Eliminado');
+				}, response => {
+					alert('Error');
+				});
+				groupService.removeEvent({event: this.event.IDEvent}, this.currentGroup.idGroup).then(response => {
+					alert('Exito');
+					this.refreshCards();
+				},response => {
+					alert('Error');
+				})
 			}
 		},
 		beforeCreate(){
