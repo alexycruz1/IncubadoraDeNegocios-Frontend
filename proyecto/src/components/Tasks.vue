@@ -81,10 +81,6 @@
 					<label>Estado</label>
 					<input type="text" v-bind:value = "task.state" v-model = "task.state">
 				</div>
-				<div class = "field">
-					<label>Fecha</label>
-					<input type="text" v-bind:value = "task.date" v-model = "task.date">
-				</div>
 			</div>
 			<br>
 			<div class = "actions">
@@ -151,7 +147,8 @@
 							editable: true,
 							events: this.currentTasks,
 							eventClick: this.showOptions,
-							dayClick: this.showNewTaskModal
+							dayClick: this.showNewTaskModal,
+							eventDrop: this.changeDate
 						});
 				}, response =>{
 					alert('Error');
@@ -205,6 +202,24 @@
 				}, response => {
 					alert('Error');
 				})
+			},
+			changeDate(event,delta,revertFunc){
+				this.task = this.verifyGroups(event);
+				this.task.date = event.start.format('YYYY/MM/DD');
+				taskService.updateTask(this.task,this.task.idTask).then(response => {
+					alert('Exito');
+					this.setTasks();
+				}, response => {
+					alert('Error');
+				});	
+			},
+			verifyGroups(event){
+				for(let i = 0; i < this.realTasks.length; i++){
+					if(event.title === this.realTasks[i].activity){
+						console.log(this.realTasks[i]);
+						return this.realTasks[i];
+					}
+				}
 			}
 		},
 		beforeCreate(){
