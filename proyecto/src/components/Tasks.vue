@@ -44,20 +44,35 @@
 			return {
 				user: {},
 				myBusiness: [],
-				currentTasks: [],
-				currentBusiness: {}
+				currentTasks: []
 			}
 		},
 		methods: {
 			show(element){
-				this.currentBusiness = element;
-				$('#calendar').fullCalendar({
-				header: {
-					left: 'prev,next today',
-					center: 'title',
-					right: 'month,basicWeek,basicDay'
-				},
-			});
+				this.currentTasks = [];
+				taskService.getTasksByBusiness(element.idBusiness).then(response => {
+						for(let i = 0; i < response.body.length; i++){
+								this.currentTasks.push({
+									title: response.body[i].activity,
+									start: response.body[i].date
+								});
+						}
+
+						console.log(response.body);
+						$('#calendar').fullCalendar({
+							header: {
+								left: 'prev,next today',
+								center: 'title',
+								right: 'month,basicWeek,basicDay'
+							},
+							navlinks: true,
+							editable: true,
+							events: this.currentTasks
+						});
+				}, response =>{
+					alert('Error');
+				});
+				
 
 			}
 		},
