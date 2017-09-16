@@ -25,11 +25,10 @@
     "semantic-ui-calendar": "0.0.8",
     "vue": "^2.0.1",
     "vue-cli": "*",
-    "vue-router": "*"
+    "vue-router": "*",
     "bcryptjs": "^2.4.3",
     "semantic-ui-icon": "^2.2.12",
-    "vue-resource": "^1.3.4",
-
+    "vue-resource": "^1.3.4"
   },
   "devDependencies": {
     "bcrypt": "^1.0.2",
