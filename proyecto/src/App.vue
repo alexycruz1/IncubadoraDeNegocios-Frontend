@@ -1,8 +1,24 @@
 <template>
   <div id="app">
-  	<div class = "ui inverted segment" v-if = !logged>
-  		<h1>Incubate</h1>
-  	</div>
+  
+  	<div class="ui inverted menu" v-if = !logged>
+  <div class="item">
+    <div>
+      <h1>Incubate</h1>
+    </div>
+  </div>
+  <div class="right item">
+    <div class="ui action input">
+      <input v-model="username" type="text" placeholder="Nombre de usuario">
+      <input v-model="password" type="password" placeholder="Contraseña">
+      <button class="ui primary button" v-on:click = "LogIn()">
+        Inicar Sesion
+      </button>
+    </div>
+  </div>
+</div>
+
+
   	<div class="ui inverted large menu" v-else-if = logged>
   		<div class="ui inverted secondary pointing menu">
     		<a class="item">
@@ -23,7 +39,7 @@
     		<div class="right menu">
     			<div  id = "dropMenu" class="ui pointing dropdown link item" >
       				Actividades <i class="dropdown icon" v-on:click = "showMenu()"></i>
-      				<div class="ui inverted menu">
+      			<div class="ui inverted menu">
                 
                 <a class = "item">
                   <router-link to = '/groups'>
@@ -54,8 +70,15 @@
                     </router-link>
                 </a>
       				</div>
-    			</div>
+    			  </div>
    			 </div>
+
+          <router-link to = "/">
+          <a class="item active" v-on:click = "ChangeSession()">
+            Cerrar Sesion
+          </a>
+        </router-link>
+
     	</div>
     </div>
     <router-view></router-view>
@@ -76,7 +99,8 @@
                 		Fundadores
               		</h4>
               		<div class="ui inverted link list">
-                		<a class="item" href="homepage.html#"> Ramiro Zuniga</a><a class="item" href="homepage.html#"> Cristian lopez</a><a class="item" href="homepage.html#"> Josue Guerrero</a><a class="item" href="homepage.html#"> Manuel Padilla</a>
+                		<a class="item" href="homepage.html#">Manuel Padilla</a>
+                    <a class="item" href="homepage.html#">Alexy Cruz</a>
               		</div>
            	 	</div>
             	<div class="seven wide column">
@@ -93,17 +117,52 @@
 </template>
 
 <script>
+import personService from './services/personServices'
+var allUsersTemp = [];
+
+personService.getPeople().then(response =>{
+          for(let i = 0; i < response.body.length; i++){
+            allUsersTemp.push(response.body[i]);
+          }
+        }, response =>{
+          alert('Error');
+        });
+
+
 export default {
   name: 'app',
   data(){
   	return {
   		logged: true, 
-  		assesor: true
+  		assesor: true,
+      allSessions: [],
+      allUsers: allUsersTemp
   	}
   },
   methods: {
       showMenu(){
         $('#dropMenu').dropdown();
+      },
+
+      LogIn(){
+        var bcrypt = require('bcryptjs');
+
+        for(let i = 0; i < this.allUsers.length; i++){
+            if(this.allUsers[i].username === this.username && bcrypt.compare(this.password, this.allUsers[i].password)){
+              this.logged = true;
+              var userInfo = {ID: this.allUsers[i].IDPerson, session: this.logged};
+              this.allSessions.push(userInfo);
+              sessionStorage.setItem('userInfo', JSON.stringify(this.allSessions));
+              console.log('Usuario si existe y coincide');
+              break;
+            }else{
+              console.log('Usuario no existe o no coincide');
+            }
+        }
+      },
+
+      ChangeSession(){
+        this.logged = false;
       }
   }
 }
@@ -115,5 +174,32 @@ export default {
   }
   .item{
     color: black;
+  }
+
+  .Model {
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-right: 50%;
+    margin-left: 1%;
+    padding: 1%;
+    border: 1%;
+    display: inline-block;
+  }
+
+  .Title {
+    display: inline-block;
+    margin: 1%;
+    border: 1%;
+    padding: 1%;
+  }
+
+  .LoginFields {
+    margin: 1%;
+    border: 1%;
+    padding: 1%;
+  }
+
+  .Background {
+    background-image: url("../../img/global-business.jpg");
   }
 </style>
