@@ -7,14 +7,15 @@ import App from './App.vue'
 import Hello from './components/Hello.vue'
 import Profile from './components/Profile.vue'
 import Groups from './components/Groups.vue'
+import LoginRegister from './components/LoginRegister.vue'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
 	routes: [
 	{
 		path: '/',
-		name: 'hello', 
-		component: Hello
+		name: 'LoginRegister', 
+		component: LoginRegister
 	},
 	{
 		path: '/profile',
