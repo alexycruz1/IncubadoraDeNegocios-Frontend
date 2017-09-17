@@ -63,7 +63,7 @@
                     </router-link>
                 </a>
                 <a class = "item">
-                  <router-link to = '/'>
+                  <router-link to = '/messages'>
                     <div class = "ui black tag label">
                       Mensajes
                     </div>
