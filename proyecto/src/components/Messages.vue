@@ -60,10 +60,10 @@
 					</div>
 					<div class = "ui form">
 						<label>New Message</label>
-						<textarea rows = "2"></textarea>
+						<textarea rows = "2" v-model = "newMessage.body"></textarea>
 					</div>
 					<br>
-					<div class = "ui right floated blue button">Enviar</div>	
+					<div class = "ui right floated blue button" v-on:click = "sendMessage()">Enviar</div>	
 				</div>
 				
 			</div>
@@ -88,6 +88,10 @@
 				user: {},
 				currentChat: {},
 				currentUser:{},
+				newMessage: {
+					idEmisor: '',
+					body: ''
+				},
 				otherUsers: [],
 				myGroups: [],
 				allChats: [],
@@ -132,6 +136,7 @@
 						alert('Error');
 					});
 				}
+				this.hear();
 			},
 			verifyChat(idPerson,chat){
 				if(chat.listOfPeople.length == 2){
@@ -163,6 +168,89 @@
 					}
 				}
 				console.log(this.array);
+			},
+			hear(){
+				this.pubnub = new PubNub({
+					subscribeKey: 'sub-c-871b7b46-9a9a-11e7-bec3-c65ebd354f7d',
+            		publishKey: 'pub-c-0e9c4d6d-1364-4c4e-89e3-b1ef0efde503'
+				});
+
+				this.pubnub.addListener({
+					status: function(eventStatus){
+						if(eventStatus.category === 'PNConnectedCategory'){
+							console.log('Conectado');
+						}else{
+							console.log('Error');
+						}
+					},
+					message: this.recieveMessage
+					
+				});
+
+				this.pubnub.subscribe({
+					channels: ['myChannel']
+				});
+			},
+			sendMessage(){
+				this.newMessage.idEmisor = this.user.IDPerson;
+
+				messageService.createMessage(this.newMessage).then(response => {
+					messageService.getAllMessages().then(response => {
+						this.allMessages = response.body;
+						console.log('Mensajes',this.allMessages);
+						chatService.addMessageToChat({message: this.allMessages[this.allMessages.length -1].idMessage},this.currentChat.IDChat).then(response => {
+							this.pubnub.publish({
+								channel: 'myChannel',
+								message: this.newMessage.body 
+							},function(status,response){
+								console.log(status,response);
+							});
+							this.getAllChats();
+							alert('Exito agregando al chat');	
+						}, response => {
+							alert('Error agregando al chat');
+						})
+					}, response => {
+						alert('Error');
+					});
+				}, response => {
+					alert('Error creating message');
+				});
+			},
+			getAllChats(){
+				chatService.getChats().then(response => {
+					this.allChats = response.body;
+					this.selectPerson(this.currentUser);
+				}, response => {
+					alert('Error');
+				});
+			},
+			getAllMessages(){
+				messageService.getAllMessages().then(response => {
+					this.allMessages = response.body;
+					console.log('Mensajes: ',this.allMessages);
+				}, response => {
+					alert('Error');
+				});
+			},
+			recieveMessage(message){
+				this.newMessage.idEmisor = this.currentUser.IDPerson;
+				this.newMessage.body = message.message;
+				messageService.createMessage(this.newMessage).then(response => {
+					messageService.getAllMessages().then(response => {
+						this.allMessages = response.body;
+						chatService.addMessageToChat({message: this.allMessages[this.allMessages.length -1].idMessage},this.currentChat.IDChat).then(response => {
+							this.getAllChats();
+							alert('Exito agregando al chat');	
+						}, response => {
+							alert('Error agregando al chat');
+						})
+					}, response => {
+						alert('Error');
+					});
+				}, response => {
+					alert('Error creating message');
+				});
 			}
 		}, 
 		beforeCreate(){
@@ -174,7 +262,6 @@
 							this.otherUsers.push(response.body[i]);
 						}				
 					}
-					console.log('Users', this.otherUsers);
 				}, response => {
 					alert('Error');
 				});
@@ -191,14 +278,13 @@
 			});
 			chatService.getChats().then(response => {
 				this.allChats = response.body;
-				console.log('Chats; ',this.allChats);
 			}, response => {
 				alert('Error');
 			});
 
 			messageService.getAllMessages().then(response => {
 				this.allMessages = response.body;
-				console.log(this.allMessages);
+				console.log('Mensajes: ',this.allMessages);
 			}, response => {
 				alert('Error');
 			});
