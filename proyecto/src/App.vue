@@ -159,6 +159,8 @@ export default {
               console.log('Usuario no existe o no coincide');
             }
         }
+
+        window.location.replace("http://localhost:8080/#/profile");
       },
 
       ChangeSession(){
