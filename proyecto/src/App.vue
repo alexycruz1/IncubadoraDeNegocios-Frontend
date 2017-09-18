@@ -55,7 +55,7 @@
                     </router-link>
                 </a>
                 <a class = "item">
-                  <router-link to = '/'>
+                  <router-link to = '/Events'>
                     <div class = "ui black tag label">
                       Eventos
                     </div>
