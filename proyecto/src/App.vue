@@ -29,12 +29,18 @@
             Perfil
           </a>
         </router-link>
-    		<a class="item" v-if = "!assesor">
-      			Asesores Disponibles
-    		</a>
-    		<a class = "item" v-else-if = "assesor">
-    			Solicitudes
-    		</a>
+        <router-link to = "/assesors" v-if = "!assesor">
+          <a class="item" >
+            Asesores Disponibles
+          </a>
+        </router-link>
+    		
+        <router-link to = "/requests" v-else-if = "assesor">
+          <a class = "item" >
+            Solicitudes
+          </a>
+        </router-link>
+    		
 
     		<div class="right menu">
     			<div  id = "dropMenu" class="ui pointing dropdown link item" >
@@ -160,6 +166,7 @@ export default {
           for(let i = 0; i < this.allUsers.length; i++){
             if(this.allUsers[i].username === this.username){
               localStorage.setItem('idUser', this.allUsers[i].IDPerson);
+              this.assesor = this.allUsers[i].isAdviser;
             }
           }
         }else{

@@ -8,12 +8,13 @@
 				</div>
 				<div class = "ui two cards">
 					<div class = "ui fluid card" v-for = "u in otherUsers" v-on:click = "selectPerson(u)">
+						<div class = "ui black ribbon label">
+							{{u.name}}
+						</div>
 						<div class = "image">
 							<img v-bind:src="u.image">
 						</div>
-						<div class = "content">
-							{{u.name}}
-						</div>
+						
 						<div class = "extra content">
 							
 						</div>
@@ -24,12 +25,13 @@
 				</div>
 				<div class = "ui two cards">
 					<div class = "ui fluid card" v-for = "group in myGroups" v-on:click = "selectGroup(group)">
+						<div class = "ui black ribbon label">
+							{{group.name}}
+						</div>
 						<div class = "image">
 							<img v-bind:src="group.image">
 						</div>
-						<div class = "content">
-							{{group.name}}
-						</div>
+						
 						<div class = "extra content">
 							
 						</div>
