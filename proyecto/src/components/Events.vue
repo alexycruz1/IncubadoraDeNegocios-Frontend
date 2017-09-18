@@ -59,7 +59,7 @@
 			</div>
 		</div>
 
-		<div class = "ui six cards">
+		<div class = "ui four cards">
 			<div class = "ui fluid card" v-for = "event in allEvents">
 				<div class = "image">
 					<img id = "eventImage2" src = "img/imageNo.jpg">
@@ -72,10 +72,71 @@
 				</div>
 				<div class="extra content">
       				<div class="ui two buttons">
-        				<div class="ui basic green button">Modificar</div>
-        				<div class="ui basic red button">Salir</div>
+        				<div class="ui basic green button" v-on:click = "modifyEventModal(event)">Modificar</div>
+        				<div class="ui basic red button" v-on:click = "deleteEventModal(event)">Salir</div>
       				</div>	  
     			</div>
+			</div>
+		</div>
+
+
+		<div class = "ui modal" id = "modifyEvent">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Modificacion de Eventos
+			</div>
+			<div class = "ui center aligned grid">
+				<div class = "seven wide column">
+					<div class = "ui medium image">
+						<img src="img/fondo2.jpg">
+					</div>
+				</div>
+				<div class = "seven wide column">
+				<br><br><br>
+					<div class = "ui form">
+						<div class = "field">
+							<label>Nombre: </label>
+							<input type="text" v-bind:value = "event.name" v-model = "event.name">
+						</div>
+						<div class = "field">
+							<label>Estado: </label>
+							<input type="text" v-bind:value= "event.status" v-model  = "event.status">
+						</div>
+						<div class = "field">
+							<label>descripcion: </label>
+							<input type="text" v-bind:value= "event.description" v-model  = "event.description">
+						</div>
+						<div class = "field">
+							<label>Fecha: </label>
+							<input type="text" v-bind:value= "event.dateAndTime" v-model  = "event.dateAndTime">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "modifyEvent()">
+      				Modificar
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>
+		</div>
+
+		<div class = "ui mini modal" id = "quitEvent">
+			<i class = "close icon"></i>
+			<div class = "header">¿Desea Eliminar?</div>
+			<div class = "extra content">
+				<div class="actions">
+    				<div class="ui black deny button">
+      					Cancelar
+    				</div>
+    				<div class="ui red right labeled icon button" v-on:click = "deleteEvent()">
+      					Eliminar
+      					<i class="checkmark icon"></i>
+    				</div>
+ 		 		</div>
 			</div>
 		</div>
 			
@@ -99,7 +160,14 @@
 		data(){
 			return {
 				allEvents: [],
-				user:{}
+				user:{},
+				event: {
+					name: '',
+					description: '',
+					dateAndTime: '', 
+					image: 'img/fondo.jpg',
+					status: ''
+				}
 			}
 		}, 
 		methods:{
@@ -121,6 +189,14 @@
 				$("#eventImage").attr("src", "img/imageNo.jpg");
 
 				$('#createEvent').modal('show');
+			},
+			deleteEventModal(element){
+				this.event = element;
+				$('#quitEvent').modal('show');
+			},
+			modifyEventModal(element){
+				this.event = element;
+				$('#modifyEvent').modal('show');
 			},
 			createEvent(){
 				$("#eventImage2").attr("src", input);
@@ -149,8 +225,6 @@
 								this.currentEvent = response.body[i];
 								this.allEvents.push(this.currentEvent);
 
-								console.log(this.currentEvent);
-
 								personService.addEvent({event: this.currentEvent.IDEvent}, actualUser).then(response => {
 									alert('event added to person');
 								}, response => {
@@ -174,13 +248,9 @@
 						alert('usuario encontrado');
 						this.user = response.body[0];
 
-						console.log(this.user);
-
 						for(let i = 0; i < this.user.listOfEvents.length; i++){
 							eventService.getEventByID(this.user.listOfEvents[i]).then(response => {
 								this.allEvents.push(response.body[0]);
-
-								console.log(i + "-" + response.body[0]);
 
 							}, response => {
 								alert('Error');
@@ -195,6 +265,21 @@
 					}, response => {
 						alert('Error');
 					});
+			},
+			deleteEvent(){
+				eventService.deleteEvent(this.event.IDEvent).then(response => {
+					alert('Eliminado');
+				}, response => {
+					alert('Error');
+				});
+			},
+			modifyEvent(){
+				eventService.editEvent(this.event, this.event.IDEvent).then(response => {
+					alert('Exito');
+					this.refreshCards();
+				}, response => {
+					alert('Error');
+				});
 			}
 		}
 	}
