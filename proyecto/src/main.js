@@ -9,6 +9,7 @@ import Profile from './components/Profile.vue'
 import Groups from './components/Groups.vue'
 import Tasks from './components/Tasks.vue'
 import LoginRegister from './components/LoginRegister.vue'
+import Events from './components/Events.vue'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -32,7 +33,12 @@ const router = new VueRouter({
 		path: '/tasks',
 		name: 'tasks', 
 		component: Tasks
-	}
+	},
+	{
+		path: '/Events',
+		name: 'Events',
+		component: Events
+	},
 	]
 });
 

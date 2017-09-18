@@ -49,7 +49,7 @@
                     </router-link>
                 </a>
                 <a class = "item">
-                  <router-link to = '/'>
+                  <router-link to = '/Events'>
                     <div class = "ui black tag label">
                       Eventos
                     </div>
@@ -146,7 +146,7 @@ export default {
 
       LogIn(){
         var bcrypt = require('bcryptjs');
-
+        
         for(let i = 0; i < this.allUsers.length; i++){
             if(this.allUsers[i].username === this.username && bcrypt.compare(this.password, this.allUsers[i].password)){
               this.logged = true;
@@ -154,13 +154,14 @@ export default {
               this.allSessions.push(userInfo);
               sessionStorage.setItem('userInfo', JSON.stringify(this.allSessions));
               console.log('Usuario si existe y coincide');
+              
+              this.logged = true;
+              window.location.replace("http://localhost:8080/#/profile");
               break;
             }else{
               console.log('Usuario no existe o no coincide');
             }
         }
-
-        window.location.replace("http://localhost:8080/#/profile");
       },
 
       ChangeSession(){
