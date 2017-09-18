@@ -52,12 +52,15 @@
       							{{element.description}}
       						</div>
     					</div>
-    					<div class="extra content">
+    					<div class="extra content" v-show = "!user.isAdviser">
       						<div class="ui two buttons">
         						<div class="ui basic green button"
         						v-on:click = "showBusinessModal(element)">Modiifcar</div>
-        						<div class="ui basic red button" v-on:click = "showDeleteModal(element)">Eliminar</div>
+        						<div class="ui basic red button" v-on:click = "showDeleteModal(element)">Abandonar</div>
       						</div>
+    					</div>
+    					<div class = "extra content" v-show = "user.isAdviser">
+    						<div class="ui basic red button" v-on:click = "showDeleteModal(element)">Dejar de Asesorar</div>
     					</div>
 					</div>
 				</div>
@@ -96,19 +99,12 @@
 				</div>
 			</div>
 			<div class="actions">
-				<div id = "menu" class = "ui dropdown" >
-					<i class = "add user icon" v-on:click = "dropDown()"></i>
-					<div class = "text" v-on:click = "dropDown()"> Agregar nuevo Fundador</div>
-					<i class = "dropdown icon" v-on:click = "dropDown()"></i>
-					<div class = "menu">
-						<div class = "item" v-for = "allUser of allUsers" v-on:click = "setNewOwner(allUser)">
-							<img clas = "ui avatar image" v-bind:src="allUser.image">
-							{{allUser.name}}
-						</div>	
-					</div>
-				</div>
+				
     			<div class="ui black deny button">
       				Cancelar
+    			</div>
+    			<div class="ui black button" v-on:click = "showUsersM()">
+      				Agregar Fundador
     			</div>
     			<div class="ui positive right labeled icon button"
     			v-on:click = "modifyBusiness()">
@@ -189,18 +185,32 @@
  		 		</div>
 			</div>
 		</div>
+
+		<div class = "ui modal" id = "usersM">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Seleccione un usuario
+			</div>
+			<div class = "content">
+				<div class = "ui four cards">
+					<div class = "red card" v-for = "u in allUsers" v-on:click = "setNewOwner(u)">
+						<div class = image>
+							<img v-bind:src="u.image">
+						</div>
+						<div class = "center aligned content">
+							{{u.name}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script >
 	import personService from './../services/personServices'
 	import businessService from './../services/businessService'
-	var business = [];
-	var people = [];
-	var person;
-
 	
-
 	export default {
 		name: 'profile',
 		data(){
@@ -216,13 +226,21 @@
 		methods: {
 			showBusinessModal(element){
 				console.log('Empresa: ', element);
+				this.getAllUsers();
+				this.currentBusiness = element;
+				$('#empresa').modal('show');
+			},
+			getAllUsers(){
+				this.allUsers = [];
 				personService.getPeople().then(response=>{
-						this.allUsers = response.body;
+						for(let i = 0; i < response.body.length; i++){
+							if(response.body[i].isAdviser === false){
+								this.allUsers.push(response.body[i]);
+							}
+						}
 					}, response=>{
 						alert('Error');
 				});
-				this.currentBusiness = element;
-				$('#empresa').modal('show');
 			},
 			showUserModal(element){
 				this.currentUser = element;
@@ -237,16 +255,21 @@
 				for(let i = 0; i < this.currentBusiness.idOwners.length; i++){
 					if(this.currentBusiness.idOwners[i] === element.IDPerson){
 						alreadyOwner = true;
-						console.log('Ya es');
+						alert('Ya es miembro');
 					}
 				}
 				if(!alreadyOwner){
 					this.newOwner = element;
-					console.log('NoEra')
+					alert('No Era Miemrbo');
+					this.modifyBusiness();
 				}
+				$('#usersM').modal('hide');
 			},
 			dropDown(){
 				$('#menu').dropdown();
+			},
+			showUsersM(){
+				$('#usersM').modal('show');
 			},
 			modifyBusiness(){
 				businessService.updateBusiness(this.currentBusiness,this.currentBusiness.idBusiness).then(response=>{
@@ -293,7 +316,7 @@
 				this.refreshCards();
 			}, 
 			refreshCards(){
-				personService.getPersonById(this.users[0].IDPerson).then(response => {
+				personService.getPersonById(this.user.IDPerson).then(response => {
 					this.listOfBusiness = [];
 					this.user = response.body[0];
 					for(let i = 0; i < this.user.listOfBusiness.length; i++){

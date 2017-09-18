@@ -160,6 +160,7 @@ export default {
           for(let i = 0; i < this.allUsers.length; i++){
             if(this.allUsers[i].username === this.username){
               localStorage.setItem('idUser', this.allUsers[i].IDPerson);
+              this.assesor = this.allUsers[i].isAdviser;
             }
           }
         }else{
