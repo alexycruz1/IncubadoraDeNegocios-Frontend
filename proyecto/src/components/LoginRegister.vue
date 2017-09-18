@@ -67,11 +67,10 @@ export default {
   methods: {
       Register(){
 		var newUser = {IDPerson: Number, username: this.username, password: this.password, scope: ["admin"], name: this.firstName + " " + this.lastName, age: "", 
-					email: this.email, phone: "", profession: "", address: "", image: "", isAdviser: this.adviser, listOfFriends: [Number], 
+					email: this.email, phone: "", profession: "", address: "", image: "img/fondo2.jpg", isAdviser: this.adviser, listOfFriends: [Number], 
 					listOfGroups: [Number], listOfEvents: [Number], listOfBusiness: [Number]};
 
 					console.log(newUser);
-
 		personService.createPerson(newUser).then(response =>{
         }, response =>{
           	alert('Error');

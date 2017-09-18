@@ -310,7 +310,7 @@
 			}
 		},
 		beforeCreate(){
-			personService.getPersonById(3).then(response => {
+			personService.getPersonById(localStorage.getItem('idUser')).then(response => {
 				this.user = response.body[0];
 				for(let i = 0; i < this.user.listOfBusiness.length; i++){
 				businessService.getBusinessById(this.user.listOfBusiness[i]).then(

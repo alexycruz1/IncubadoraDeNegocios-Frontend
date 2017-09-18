@@ -134,15 +134,21 @@
 					}
 					console.log('Mensajes: ', this.currentMessages);
 					this.prepareArray();
+					this.hear();
 				}else{
+					console.log('Chat no existe',this.user.IDPerson);
 					chatService.createChat({
-						listOfPeople: this.user.IDPerson,
-						listOfPeople: this.currentUser.IDPerson
+						listOfPeople: this.user.IDPerson
 					}).then(response => {
-						chatService.getChats().then(response => {
-							this.allChats = response.body;
-							console.log('Chats; ',this.allChats);
-							this.selectPerson(this.currentUser);
+						chatService.addPersonToChat({listOfPeople: this.currentUser.IDPerson},this.allChats[this.allChats.length-1].IDChat + 1).then(response => {
+							chatService.getChats().then(response => {
+								this.allChats = response.body;
+								this.currentChat = this.allChats[this.allChats.length-1];
+								this.currentMessages = [];
+								this.hear();
+							}, response => {
+								alert('Error');
+							})
 						}, response => {
 							alert('Error');
 						});
@@ -150,7 +156,7 @@
 						alert('Error');
 					});
 				}
-				this.hear();
+				
 			},
 			selectGroup(element){
 				this.personalChat = false;
@@ -175,7 +181,7 @@
 									chatService.getChats().then(response => {
 										this.allChats = response.body;
 										this.currentChat = response.body[response.body.length-1];
-										
+										this.hear();
 									}, response => {
 										alert('Error getting all chats');
 									})
@@ -204,9 +210,10 @@
 					}
 					console.log(this.currentChat);
 					console.log(this.currentMessages);
+					this.hear();
 				}
 				this.prepareArray();
-				this.hear();
+				
 			},
 			verifyChat(idPerson,chat){
 				if(chat.listOfPeople.length == 2){
@@ -318,7 +325,7 @@
 			}
 		}, 
 		beforeCreate(){
-			personService.getPersonById(2).then(response => {
+			personService.getPersonById(localStorage.getItem('idUser')).then(response => {
 				this.user = response.body[0];
 				personService.getPeople().then(response => {
 					for(let i = 0; i < response.body.length; i++){

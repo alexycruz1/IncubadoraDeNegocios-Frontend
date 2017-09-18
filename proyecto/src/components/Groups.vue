@@ -380,7 +380,7 @@
 				this.user = {};
 				this.groups = [];
 				this.showInfo = false;
-				personService.getPersonById(2).then(response => {
+				personService.getPersonById(localStorage.getItem('idUser')).then(response => {
 				this.user = response.body[0];
 			for(let i = 0; i < this.user.listOfGroups.length; i++){
 				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {
@@ -591,7 +591,7 @@
 			}
 		},
 		beforeCreate(){
-			personService.getPersonById(2).then(response => {
+			personService.getPersonById(localStorage.getItem('idUser')).then(response => {
 			this.user = response.body[0];
 			for(let i = 0; i < this.user.listOfGroups.length; i++){
 				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {
