@@ -96,11 +96,11 @@
 					<div class = "ui form">
 						<div class = "field">
 							<label>Nombre: </label>
-							<input type="text" v-bind:value = "event.name" v-model = "event.name">
+							<input type="text" v-bind:value = "event.name" v-model = "name">
 						</div>
 						<div class = "field">
 							<label>Estado: </label>
-							<input type="text" v-bind:value= "event.status" v-model  = "event.status">
+							<input type="text" v-bind:value= "event.status" v-model  = "status">
 						</div>
 						<div class = "field">
 							<label>descripcion: </label>
@@ -165,7 +165,7 @@
 					name: '',
 					description: '',
 					dateAndTime: '', 
-					image: 'img/fondo.jpg',
+					image: '',
 					status: ''
 				}
 			}
@@ -268,6 +268,28 @@
 			},
 			deleteEvent(){
 				eventService.deleteEvent(this.event.IDEvent).then(response => {
+
+					for (var i = this.allEvents.length; i > 0; i--) {
+ 						this.allEvents.pop();
+					}
+					
+					personService.getPersonById(actualUser).then(response => {
+						alert('usuario encontrado');
+						this.user = response.body[0];
+
+						for(let i = 0; i < this.user.listOfEvents.length; i++){
+							eventService.getEventByID(this.user.listOfEvents[i]).then(response => {
+								this.allEvents.push(response.body[0]);
+
+							}, response => {
+								alert('Error');
+							});
+						}
+
+					}, response => {
+						alert('Error');
+					});
+
 					alert('Eliminado');
 				}, response => {
 					alert('Error');
@@ -275,8 +297,28 @@
 			},
 			modifyEvent(){
 				eventService.editEvent(this.event, this.event.IDEvent).then(response => {
-					alert('Exito');
-					this.refreshCards();
+					for (var i = this.allEvents.length; i > 0; i--) {
+ 						this.allEvents.pop();
+					}
+
+					personService.getPersonById(actualUser).then(response => {
+						alert('usuario encontrado');
+						this.user = response.body[0];
+
+						for(let i = 0; i < this.user.listOfEvents.length; i++){
+							eventService.getEventByID(this.user.listOfEvents[i]).then(response => {
+								this.allEvents.push(response.body[0]);
+
+							}, response => {
+								alert('Error');
+							});
+						}
+
+					}, response => {
+						alert('Error');
+					});
+
+
 				}, response => {
 					alert('Error');
 				});
