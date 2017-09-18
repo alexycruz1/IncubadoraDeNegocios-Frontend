@@ -23,7 +23,7 @@
 					Grupos
 				</div>
 				<div class = "ui two cards">
-					<div class = "ui fluid card" v-for = "group in myGroups">
+					<div class = "ui fluid card" v-for = "group in myGroups" v-on:click = "selectGroup(group)">
 						<div class = "image">
 							<img v-bind:src="group.image">
 						</div>
@@ -88,6 +88,8 @@
 				user: {},
 				currentChat: {},
 				currentUser:{},
+				currentGroup:{},
+				personalChat: true,
 				newMessage: {
 					idEmisor: '',
 					body: ''
@@ -101,17 +103,28 @@
 			}
 		}, 
 		methods: {
+			belongToGroup(chat){
+				for(let i = 0; i < this.myGroups.length; i++){
+					if(chat.IDChat === this.myGroups[i].idChat){
+						return true;
+					}
+				}
+				return false;
+			},
 			selectPerson(element){
 				var existChat = false;
+				this.personalChat = true;
 				this.currentUser = element;
 				this.currentMessages = [];
 				for(let i = 0; i < this.allChats.length; i++){
-					if(this.verifyChat(this.user.IDPerson,this.allChats[i]) && this.verifyChat(element.IDPerson,this.allChats[i])){
+					if(this.verifyChat(this.user.IDPerson,this.allChats[i]) && this.verifyChat(element.IDPerson,this.allChats[i]) && !this.belongToGroup(this.allChats[i])){
 						existChat = true;
 						this.currentChat = this.allChats[i];
 					}
 				}
 				if(existChat){
+					console.log('Chat si existe');
+					console.log('chat: ', this.currentChat);
 					for(let i = 0; i < this.currentChat.listOfMessages.length; i++){
 						for(let k = 0; k < this.allMessages.length; k++){
 							if(this.allMessages[k].idMessage === this.currentChat.listOfMessages[i]){
@@ -119,6 +132,7 @@
 							}
 						}
 					}
+					console.log('Mensajes: ', this.currentMessages);
 					this.prepareArray();
 				}else{
 					chatService.createChat({
@@ -138,6 +152,62 @@
 				}
 				this.hear();
 			},
+			selectGroup(element){
+				this.personalChat = false;
+				this.currentGroup = element;
+				this.currentMessages = [];
+				if(this.currentGroup.idChat === undefined){
+					console.log('Entra');
+					chatService.createChat({
+						listOfPeople: this.currentGroup.members[0]
+					}).then(response => {
+						chatService.getChats().then(response => {
+							this.currentChat = response.body[response.body.length-1];
+								groupService.updateGroup({idChat: this.currentChat.IDChat},this.currentGroup.idGroup).then(response => {
+
+								}, response => {
+									alert('Error adding chat to group');
+								});
+							for(let i = 1; i < this.currentGroup.members.length; i++){
+								chatService.addPersonToChat({
+									listOfPeople: this.currentGroup.members[i]
+								},this.currentChat.IDChat).then(response=>{
+									chatService.getChats().then(response => {
+										this.allChats = response.body;
+										this.currentChat = response.body[response.body.length-1];
+										
+									}, response => {
+										alert('Error getting all chats');
+									})
+								}, response => {
+									alert('Error adding members real');
+								});
+							}
+						}, response => {
+							alert('Error getting al chats grande');
+						});
+					}, response => {
+						alert('Error creating chat');
+					});
+				}else{
+					for(let i = 0; i < this.allChats.length; i++){
+						if(this.allChats[i].IDChat === this.currentGroup.idChat){
+							this.currentChat = this.allChats[i];
+						}
+					}
+					for(let i = 0; i < this.currentChat.listOfMessages.length; i++){
+						for(let k = 0; k < this.allMessages.length; k++){
+							if(this.allMessages[k].idMessage === this.currentChat.listOfMessages[i]){
+								this.currentMessages.push(this.allMessages[k]);
+							}
+						}
+					}
+					console.log(this.currentChat);
+					console.log(this.currentMessages);
+				}
+				this.prepareArray();
+				this.hear();
+			},
 			verifyChat(idPerson,chat){
 				if(chat.listOfPeople.length == 2){
 					for(let i = 0; i < chat.listOfPeople.length; i++){
@@ -150,15 +220,21 @@
 			},
 			prepareArray(){
 				this.array = [];
+				console.log('Entra');
 				for(let i = 0; i < this.currentMessages.length; i++){
 					if(this.currentMessages[i].idEmisor === this.user.IDPerson){
 						this.array.push({
 							segment: 'ui right aligned clearing segment',
 							image: this.user.image,
 							message: this.currentMessages[i].body,
-							user: this.user.name
+							user: 'Y0'
 						});
 					}else{
+						for(let k = 0; k < this.otherUsers.length; k++){
+							if(this.currentMessages[i].idEmisor === this.otherUsers[k].IDPerson){
+								this.currentUser = this.otherUsers[k];
+							}
+						}
 						this.array.push({
 							segment: 'ui left aligned clearing segment',
 							image: this.currentUser.image,
@@ -188,7 +264,7 @@
 				});
 
 				this.pubnub.subscribe({
-					channels: ['myChannel']
+					channels: ['chat' + this.currentChat.IDChat]
 				});
 			},
 			sendMessage(){
@@ -200,13 +276,12 @@
 						console.log('Mensajes',this.allMessages);
 						chatService.addMessageToChat({message: this.allMessages[this.allMessages.length -1].idMessage},this.currentChat.IDChat).then(response => {
 							this.pubnub.publish({
-								channel: 'myChannel',
+								channel: 'chat' + this.currentChat.IDChat,
 								message: this.newMessage.body 
 							},function(status,response){
 								console.log(status,response);
 							});
-							this.getAllChats();
-							alert('Exito agregando al chat');	
+							//alert('Exito agregando al chat');	
 						}, response => {
 							alert('Error agregando al chat');
 						})
@@ -220,7 +295,11 @@
 			getAllChats(){
 				chatService.getChats().then(response => {
 					this.allChats = response.body;
-					this.selectPerson(this.currentUser);
+					if(this.personalChat){
+						this.selectPerson(this.currentUser);
+					}else{
+						this.selectGroup(this.currentGroup);	
+					}
 				}, response => {
 					alert('Error');
 				});
@@ -234,23 +313,8 @@
 				});
 			},
 			recieveMessage(message){
-				this.newMessage.idEmisor = this.currentUser.IDPerson;
-				this.newMessage.body = message.message;
-				messageService.createMessage(this.newMessage).then(response => {
-					messageService.getAllMessages().then(response => {
-						this.allMessages = response.body;
-						chatService.addMessageToChat({message: this.allMessages[this.allMessages.length -1].idMessage},this.currentChat.IDChat).then(response => {
-							this.getAllChats();
-							alert('Exito agregando al chat');	
-						}, response => {
-							alert('Error agregando al chat');
-						})
-					}, response => {
-						alert('Error');
-					});
-				}, response => {
-					alert('Error creating message');
-				});
+				this.getAllChats();				
+				console.log('Recibi');
 			}
 		}, 
 		beforeCreate(){
