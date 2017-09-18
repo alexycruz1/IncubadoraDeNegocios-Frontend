@@ -10,6 +10,7 @@ import Groups from './components/Groups.vue'
 import Tasks from './components/Tasks.vue'
 import LoginRegister from './components/LoginRegister.vue'
 import Messages from './components/Messages.vue'
+import Assesors from './components/Assesors.vue'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -39,6 +40,11 @@ const router = new VueRouter({
 		name: 'messages', 
 		component: Messages
 
+	},
+	{
+		path: '/assesors',
+		name: 'assesors', 
+		component: Assesors
 	}
 	]
 });

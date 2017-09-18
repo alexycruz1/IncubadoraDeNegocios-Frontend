@@ -29,9 +29,12 @@
             Perfil
           </a>
         </router-link>
-    		<a class="item" v-if = "!assesor">
-      			Asesores Disponibles
-    		</a>
+        <router-link to = "/assesors" v-if = "!assesor">
+          <a class="item" >
+            Asesores Disponibles
+          </a>
+        </router-link>
+    		
     		<a class = "item" v-else-if = "assesor">
     			Solicitudes
     		</a>

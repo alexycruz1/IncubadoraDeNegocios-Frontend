@@ -57,6 +57,13 @@ export default {
         console.log(business);
         return Vue.http.put(url + 'BusinessFromPerson/' + IDPerson, business);
     },
+    addRequest(newRequest, IDPerson){
+        return Vue.http.put(url + 'RequestToPerson/' + IDPerson, newRequest);
+    },
+
+    deleteRequest(request, IDPerson){
+        return Vue.http.put(url + 'RequestFromPerson/' + IDPerson, request);
+    },
     getPersonById(IDPerson){
         return Vue.http.get(url + 'PersonById/' + IDPerson);
     }

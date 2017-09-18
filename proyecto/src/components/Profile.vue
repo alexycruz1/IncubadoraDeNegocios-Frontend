@@ -35,16 +35,20 @@
 				<div class = "ui vertical divider"></div>
 			</div>
 			<div class = "seven wide column">
-				<div class = "ui big message">
+				<div class = "ui big message" v-show = "!user.isAdviser">
 					Perfil de Empresas
+				</div>
+				<div class = "ui big message" v-show = "user.isAdviser">
+					Empresas Asesoradas
 				</div>
 				<div class = "ui two cards">
 					<div class = "ui fluid card" v-for = "element of listOfBusiness">
+						<div class="ui black ribbon label">{{element.name}}</div>
 						<div class="image">
       						<img v-bind:src="element.image">
     					</div>
     					<div class="content">
-      						<div class="header">{{element.name}}</div>
+      						
       						<div class="meta">
         						<a>{{element.location}}</a>
       						</div>
