@@ -6,12 +6,13 @@
 				<div class = "ui big message">Mis Empresas</div>
 				<div class = "ui two cards">
 					<div class = "ui fluid card" v-for = "business in myBusiness" v-on:click = "show(business)">
+						<div class = "ui black ribbon label">
+							{{business.name}}
+						</div>
 						<div class = "image">
 							<img v-bind:src="business.image">
 						</div>
-						<div class = "content">
-							{{business.name}}
-						</div>
+						
 						<div class = "extra content"></div>
 					</div>
 				</div>
@@ -223,7 +224,7 @@
 			}
 		},
 		beforeCreate(){
-			personService.getPersonById(3).then(response => {
+			personService.getPersonById(localStorage.getItem('idUser')).then(response => {
 				this.user = response.body[0];
 				for(let i = 0; i < this.user.listOfBusiness.length; i++){
 					businessService.getBusinessById(this.user.listOfBusiness[i]).then(response => {

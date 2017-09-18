@@ -1,7 +1,7 @@
 <template>
   <div id="app">
   
-  	<div class="ui inverted menu" v-if = !logged>
+  	<div class="ui inverted menu" v-show = "!logged">
   <div class="item">
     <div>
       <h1>Incubate</h1>
@@ -19,22 +19,28 @@
 </div>
 
 
-  	<div class="ui inverted large menu" v-else-if = logged>
+  	<div class="ui inverted large menu" v-show = "logged">
   		<div class="ui inverted secondary pointing menu">
     		<a class="item">
       			Inicio
     		</a>
         <router-link to = "/profile">
-          <a class="item active">
+          <a class="item">
             Perfil
           </a>
         </router-link>
-    		<a class="item" v-if = !assesor>
-      			Asesores Disponibles
-    		</a>
-    		<a class = "item" v-else-if = assesor>
-    			Solicitudes
-    		</a>
+        <router-link to = "/assesors" v-if = "!assesor">
+          <a class="item" >
+            Asesores Disponibles
+          </a>
+        </router-link>
+    		
+        <router-link to = "/requests" v-else-if = "assesor">
+          <a class = "item" >
+            Solicitudes
+          </a>
+        </router-link>
+    		
 
     		<div class="right menu">
     			<div  id = "dropMenu" class="ui pointing dropdown link item" >
@@ -63,7 +69,7 @@
                     </router-link>
                 </a>
                 <a class = "item">
-                  <router-link to = '/'>
+                  <router-link to = '/messages'>
                     <div class = "ui black tag label">
                       Mensajes
                     </div>
@@ -118,25 +124,14 @@
 
 <script>
 import personService from './services/personServices'
-var allUsersTemp = [];
-
-personService.getPeople().then(response =>{
-          for(let i = 0; i < response.body.length; i++){
-            allUsersTemp.push(response.body[i]);
-          }
-        }, response =>{
-          alert('Error');
-        });
-
-
 export default {
   name: 'app',
   data(){
   	return {
-  		logged: true, 
+  		logged: Boolean, 
   		assesor: true,
       allSessions: [],
-      allUsers: allUsersTemp
+      allUsers: []
   	}
   },
   methods: {
@@ -146,27 +141,53 @@ export default {
 
       LogIn(){
         var bcrypt = require('bcryptjs');
-        
-        for(let i = 0; i < this.allUsers.length; i++){
-            if(this.allUsers[i].username === this.username && bcrypt.compare(this.password, this.allUsers[i].password)){
-              this.logged = true;
-              var userInfo = {ID: this.allUsers[i].IDPerson, session: this.logged};
-              this.allSessions.push(userInfo);
-              sessionStorage.setItem('userInfo', JSON.stringify(this.allSessions));
-              console.log('Usuario si existe y coincide');
-              
-              this.logged = true;
-              window.location.replace("http://localhost:8080/#/profile");
-              break;
+        this.allUsers = [];
+        personService.getPeople().then(response => {
+          this.allUsers = response.body;
+
+          for(let i = 0; i < this.allUsers.length; i++){
+            if(this.username === this.allUsers[i].username){
+              bcrypt.compare(this.password,this.allUsers[i].password,this.verifyUser);
             }else{
-              console.log('Usuario no existe o no coincide');
+              console.log('Usuario incorrecto');
             }
+          }
+        }, response => {
+          alert('Error');
+        });
+
+
+      },
+      verifyUser(err,res){
+        console.log('res', res);
+        if(res){
+          this.logged = true;
+          localStorage.setItem('logged', true);
+          for(let i = 0; i < this.allUsers.length; i++){
+            if(this.allUsers[i].username === this.username){
+              localStorage.setItem('idUser', this.allUsers[i].IDPerson);
+              this.assesor = this.allUsers[i].isAdviser;
+            }
+          }
+        }else{
+          console.log('Contraseña incorrecta');
         }
       },
-
       ChangeSession(){
         this.logged = false;
+        localStorage.setItem('logged', false);
       }
+  },
+  beforeCreate(){
+    personService.getPeople().then(response =>{
+          for(let i = 0; i < response.body.length; i++){
+            this.allUsers.push(response.body[i]);
+          }
+          this.logged = false;
+          localStorage.setItem('logged',false);
+        }, response =>{
+          alert('Error');
+        });
   }
 }
 </script>
