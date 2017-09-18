@@ -11,6 +11,7 @@ import Tasks from './components/Tasks.vue'
 import LoginRegister from './components/LoginRegister.vue'
 import Messages from './components/Messages.vue'
 import Assesors from './components/Assesors.vue'
+import Requests from './components/Requests.vue'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -45,6 +46,11 @@ const router = new VueRouter({
 		path: '/assesors',
 		name: 'assesors', 
 		component: Assesors
+	},
+	{
+		path: '/requests',
+		name: 'requests', 
+		component: Requests
 	}
 	]
 });

@@ -35,9 +35,12 @@
           </a>
         </router-link>
     		
-    		<a class = "item" v-else-if = "assesor">
-    			Solicitudes
-    		</a>
+        <router-link to = "/requests" v-else-if = "assesor">
+          <a class = "item" >
+            Solicitudes
+          </a>
+        </router-link>
+    		
 
     		<div class="right menu">
     			<div  id = "dropMenu" class="ui pointing dropdown link item" >

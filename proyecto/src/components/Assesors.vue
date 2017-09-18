@@ -65,7 +65,7 @@
     				<div class="ui black deny button">
       					Cancelar
     				</div>
-    				<div class="ui red right labeled icon button" v-on:click = "sendRequest()">
+    				<div class="ui green right labeled icon button" v-on:click = "sendRequest()">
       					Enviar
       					<i class="checkmark icon"></i>
     				</div>
