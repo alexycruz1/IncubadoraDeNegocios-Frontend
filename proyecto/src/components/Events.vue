@@ -96,11 +96,11 @@
 					<div class = "ui form">
 						<div class = "field">
 							<label>Nombre: </label>
-							<input type="text" v-bind:value = "event.name" v-model = "name">
+							<input type="text" v-bind:value = "event.name" v-model = "event.name">
 						</div>
 						<div class = "field">
 							<label>Estado: </label>
-							<input type="text" v-bind:value= "event.status" v-model  = "status">
+							<input type="text" v-bind:value= "event.status" v-model  = "event.status">
 						</div>
 						<div class = "field">
 							<label>descripcion: </label>
@@ -149,12 +149,6 @@
 	var input = 'nada';
 
 
-	if(sessionStorage.getItem('userInfo') != undefined){
-		var actualUser = sessionStorage.getItem('userInfo');
-		actualUser = JSON.parse(actualUser);
-		actualUser = actualUser[0].ID;
-	}
-	
 	export default{
 		name: 'events', 
 		data(){
@@ -301,7 +295,7 @@
  						this.allEvents.pop();
 					}
 
-					personService.getPersonById(actualUser).then(response => {
+					personService.getPersonById(this.user.IDPerson).then(response => {
 						alert('usuario encontrado');
 						this.user = response.body[0];
 
@@ -322,6 +316,31 @@
 				}, response => {
 					alert('Error');
 				});
+			}
+		},
+		beforeCreate(){
+
+			if(sessionStorage.getItem('userInfo') != undefined){
+				var actualUser = sessionStorage.getItem('userInfo');
+				actualUser = JSON.parse(actualUser);
+				actualUser = actualUser[0].ID;
+
+				personService.getPersonById(actualUser).then(response => {
+					this.user = response.body[0];
+					console.log(this.user);
+					for(let i = 0; i < this.user.listOfEvents.length; i++){
+						eventService.getEventByID(this.user.listOfEvents[i]).then(response =>{
+							this.allEvents.push(response.body[0]);
+							console.log()
+						}, response => {
+							alert('Error');
+						} )
+					}
+				},response => {
+					alert('Error');
+				});
+
+				eventService.getEvents()
 			}
 		}
 	}

@@ -126,6 +126,9 @@ export default {
 			$("#businessImage").attr("src", input);	
 		};
 	},
+	showModal(){
+			$('#createBusiness').modal('show');
+		},
       Register(){
 		var newUser = {IDPerson: Number, username: this.username, password: this.password, scope: ["admin"], name: this.firstName + " " + this.lastName, age: "", 
 					email: this.email, phone: "", profession: "", address: "", image: "", isAdviser: this.adviser, listOfFriends: [Number], 
@@ -137,6 +140,7 @@ export default {
         }, response =>{
           	alert('Error');
         });
+		this.showModal();
     },
 	createBusiness(){
 		businessService.getAllBusiness().then(response => {
