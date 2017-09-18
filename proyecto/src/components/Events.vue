@@ -125,6 +125,10 @@
 			createEvent(){
 				$("#eventImage2").attr("src", input);
 
+				for (var i = this.allEvents.length; i > 0; i--) {
+ 					this.allEvents.pop();
+				}
+
 				personService.getPersonById(actualUser).then(response => {
 					this.user = response.body[0];
 					alert('user assigned');
@@ -137,24 +141,23 @@
 
 					eventService.createEvent(newEvent).then(response => {
 						alert('Event created');
-					}, response => {
-						alert('Error');
-					})
 
-						var currentEvent;
 
 					eventService.getEvents().then(response =>{
           				for(let i = 0; i < response.body.length; i++){
             				if(i === response.body.length - 1){
-								currentEvent = response.body[i];
+								this.currentEvent = response.body[i];
+								this.allEvents.push(this.currentEvent);
 
-								personService.addEvent({event: currentEvent.IDEvent}, actualUser).then(response => {
+								console.log(this.currentEvent);
+
+								personService.addEvent({event: this.currentEvent.IDEvent}, actualUser).then(response => {
 									alert('event added to person');
 								}, response => {
 									alert('Error');
 								});
 
-								eventService.addPersonToEvent({person: actualUser}, currentEvent.IDEvent).then(respone =>{
+								eventService.addPersonToEvent({person: actualUser}, this.currentEvent.IDEvent).then(respone =>{
 									alert('person added to event');
 								}, response => {
 									alert('Error');
@@ -170,23 +173,28 @@
 					personService.getPersonById(actualUser).then(response => {
 						alert('usuario encontrado');
 						this.user = response.body[0];
+
+						console.log(this.user);
+
 						for(let i = 0; i < this.user.listOfEvents.length; i++){
 							eventService.getEventByID(this.user.listOfEvents[i]).then(response => {
-								if(response.body[i] != undefined){
-									this.allEvents.push(response.body[0]);
-									alert('Evento añadido a lista');
-								}else{
-									alert('Evento no existe')
-								}
+								this.allEvents.push(response.body[0]);
+
+								console.log(i + "-" + response.body[0]);
+
 							}, response => {
 								alert('Error');
 							});
 						}
+
 					}, response => {
 						alert('Error');
 					});
 
-					console.log(this.user.listOfEvents);
+
+					}, response => {
+						alert('Error');
+					});
 			}
 		}
 	}
