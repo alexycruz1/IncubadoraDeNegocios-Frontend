@@ -109,11 +109,27 @@
 				$('#ask').modal('show');
 			},
 			sendRequest(){
-				personService.addRequest({request: this.currentBusiness.idBusiness}, this.currentAssesor.IDPerson).then(response => {
-					alert('Exito');
-				}, response => {
-					alert('Error');
-				});
+				var existRequest = false;
+				for(let i = 0; i < this.currentAssesor.listOfBusiness; i++){
+					if(this.currentAssesor.listOfBusiness[i] === this.currentBusiness.idBusiness){
+						existRequest = true;
+						console.log('Ya asesora a la empresa');
+					}
+				}
+
+				for(let i = 0; i < this.currentAssesor.listOfRequests; i++){
+					if(this.currentAssesor.listOfRequests[i] === this.currentBusiness.idBusiness){
+						existRequest = true;
+						alert('Ya envio la solicitud');
+					}
+				}
+				if(!existRequest){
+					personService.addRequest({request: this.currentBusiness.	idBusiness}, this.currentAssesor.IDPerson).then(response 	=> {
+						alert('Exito');
+					}, response => {
+						alert('Error');
+					});
+				}
 			}
 		}, 
 		beforeCreate(){
