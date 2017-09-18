@@ -73,7 +73,7 @@
 				<div class="extra content">
       				<div class="ui two buttons">
         				<div class="ui basic green button" v-on:click = "modifyEventModal(event)">Modificar</div>
-        				<div class="ui basic red button" v-on:click = "deleteEventModal(event)">Salir</div>
+        				<div class="ui basic red button" v-on:click = "deleteEventModal(event)">Eliminar</div>
       				</div>	  
     			</div>
 			</div>
