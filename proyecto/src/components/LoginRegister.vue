@@ -54,29 +54,200 @@
 		<div class = "BottomSpace">
 		</div>
 
+		<div class = "ui modal" id = "createBusiness">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Agregar empresa
+			</div>
+			<div class = "ui center aligned grid">
+				<div class = "seven wide column">
+					<div class = "ui medium image" v-on:click = "uploadImg()">
+						<img src="img/imageNo.jpg" id = "businessImage">
+					</div>
+				</div>
+				<div class = "seven wide column">
+				<br><br><br>
+					<div class = "ui form">
+						<div class = "field">
+							<label>Nombre:</label>
+							<input type="text" v-model = "bName">
+						</div>
+						<div class = "field">
+							<label>direccion:</label>
+							<input type="text" v-model = "bLocation">
+						</div>
+						<div class = "field">
+							<label>descripcion:</label>
+							<input type="text" v-model = "bDescription">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "createBusiness()">
+      				Crear
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>
+		</div>
+
 	</div>
 </template>
 
 <script>
 	import personService from './../services/personServices'
+	import businessService from './../services/businessService'
 
+	var input = 'nada';
 
 export default {
-  name: 'LoginRegister',
-
+	name: 'LoginRegister',
+	data(){
+		return {
+			userRegistered: Object,
+			allBusiness: [],
+			businessRegistered: Object
+		}
+	},
   methods: {
-      Register(){
-		var newUser = {IDPerson: Number, username: this.username, password: this.password, scope: ["admin"], name: this.firstName + " " + this.lastName, age: "", 
-					email: this.email, phone: "", profession: "", address: "", image: "", isAdviser: this.adviser, listOfFriends: [Number], 
-					listOfGroups: [Number], listOfEvents: [Number], listOfBusiness: [Number]};
+	  uploadImg(){
 
-					console.log(newUser);
+		input = document.createElement("INPUT");
+		input.setAttribute("type", "file");
+		input.click();
+
+		input.onchange = function () {
+			input = this.value;
+			input = input.substring(12, input.length);
+			input = "img/" + input;
+
+			$("#businessImage").attr("src", input);	
+		};
+	},
+	showModal(){
+			$('#createBusiness').modal('show');
+		},
+      Register(){
+		var newUser = {username: this.username, password: this.password, scope: ["admin"], 
+						name: this.firstName + " " + this.lastName, age: "", email: this.email, 
+						phone: "", profession: "", address: "", image: "img/fondo2.jpg", 
+						isAdviser: this.adviser};
+
+		console.log(newUser);
+
+		this.userRegistered = newUser;
 
 		personService.createPerson(newUser).then(response =>{
+			personService.getPeople().then(response => {
+				for(let i = 0; i < response.body.length; i++){
+					if(i === response.body.length - 1){
+						var tempUser = response.body[i];
+						localStorage.setItem('idUser', tempUser.IDPerson);
+					}
+				}
+			}, response => {
+
+			});
         }, response =>{
           	alert('Error');
         });
-    }
+		this.showModal();
+    },
+	createBusiness(){
+		businessService.getAllBusiness().then(response => {
+			for(let i = 0; i < response.body.length; i++){
+				this.allBusiness.push(response.body[i]);
+			}
+
+			var bCode = "";
+
+			for (let i = 0; i < 5; i++) {
+				var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    			bCode += possible.charAt(Math.floor(Math.random() * possible.length));
+			}
+
+			var available = true;
+
+			for(let i = 0; i < this.allBusiness.length; i++){
+				if(this.allBusiness[i].code === bCode){
+					available = false;
+				}
+			}
+
+			while(!available){
+				for (let i = 0; i < 5; i++) {
+					var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    				bCode += possible.charAt(Math.floor(Math.random() * possible.length));
+				}
+
+				for(let i = 0; i < this.allBusiness.length; i++){
+					if(this.allBusiness[i].code === bCode){
+						available = false;
+					}else{
+						available = true;
+					}
+				}		
+			}
+
+			var newBusiness = {name: this.bName, code: bCode, location: this.bLocation, 
+							description: this.bDescription, image: input};
+
+			this.businessRegistered = newBusiness;
+
+			businessService.createBusiness(newBusiness).then(response => {
+				alert('business created');
+
+				businessService.getAllBusiness().then(response => {
+					this.allBusiness = [];
+
+					for(let i = 0; i < response.body.length; i++){
+						if(i === response.body.length - 1){
+							this.businessRegistered = response.body[i];
+						}
+					}
+
+					personService.getPeople().then(response => {
+					for(let i = 0; i < response.body.length; i++){
+						if(i === response.body.length - 1){
+							this.userRegistered = response.body[i];
+						}
+					}
+
+
+					personService.addBusiness({business: this.businessRegistered.idBusiness}, this.userRegistered.IDPerson).then(response => {
+					alert('business added to person');
+					console.log('Empresa: ' + this.businessRegistered.idBusiness);
+					console.log('Persona: ' + this.userRegistered.IDPerson);
+				}, response => {
+					alert('Error adding business to person');
+				});
+
+				businessService.addOwner({owner: this.userRegistered.IDPerson}, this.businessRegistered.idBusiness).then(response => {
+					alert('Owner added to business');
+					console.log('Empresa: ' + this.businessRegistered.idBusiness);
+					console.log('Persona: ' + this.userRegistered.IDPerson);
+				}, response => {
+					alert('Owner cant be added');
+				});
+				}, response => {
+					alert('person cant be found');
+				});
+
+				
+				}, response => {
+					alert('business cant be found');
+				});
+			}, response => {
+				alert('Error creating business');
+			});
+
+		}, response => {
+			alert('Error getting business');
+		});
+	}
   }
 }
 </script>

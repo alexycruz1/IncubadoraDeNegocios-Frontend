@@ -18,14 +18,9 @@
 				</div>
 				<div class = "ui two cards">
 					<div class = "ui fluid card" v-for = "group in groups" >
+						<div class = "ui black ribbon label">{{group.name}}</div>
 						<div class = "image" v-on:click = "showGroupInfo(group)">
 							<img v-bind:src="group.image">
-						</div>
-						<div class = "content">
-							<div class = "header">{{group.name}}</div>
-							<div class = "meta">
-								<a>{{group.state}}</a>
-							</div>
 						</div>
 						<div class="extra content">
       						<div class="ui two buttons">
@@ -380,7 +375,7 @@
 				this.user = {};
 				this.groups = [];
 				this.showInfo = false;
-				personService.getPersonById(2).then(response => {
+				personService.getPersonById(localStorage.getItem('idUser')).then(response => {
 				this.user = response.body[0];
 			for(let i = 0; i < this.user.listOfGroups.length; i++){
 				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {
@@ -591,7 +586,7 @@
 			}
 		},
 		beforeCreate(){
-			personService.getPersonById(2).then(response => {
+			personService.getPersonById(localStorage.getItem('idUser')).then(response => {
 			this.user = response.body[0];
 			for(let i = 0; i < this.user.listOfGroups.length; i++){
 				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {

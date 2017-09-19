@@ -20,14 +20,16 @@
     "vue": "vue/dist/vue.common.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "moment": "^2.18.1",
     "momentjs": "^2.0.0",
+    "pubnub": "^4.15.1",
     "semantic-ui-calendar": "0.0.8",
+    "semantic-ui-icon": "^2.2.12",
+    "semantic-ui-modal": "^2.2.12",
     "vue": "^2.0.1",
     "vue-cli": "*",
     "vue-router": "*",
-    "bcryptjs": "^2.4.3",
-    "semantic-ui-icon": "^2.2.12",
     "vue-resource": "^1.3.4"
   },
   "devDependencies": {
