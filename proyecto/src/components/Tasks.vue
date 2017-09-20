@@ -4,7 +4,7 @@
 			<div class = "one wide column"></div>
 			<div class = "six wide column">
 				<div class = "ui big message">Mis Empresas</div>
-				<div class = "ui two cards">
+				<div class = "ui two cards" style="overflow-y:scroll;max-height: 400px;">
 					<div class = "ui fluid card" v-for = "business in myBusiness" v-on:click = "show(business)">
 						<div class = "ui black ribbon label">
 							{{business.name}}

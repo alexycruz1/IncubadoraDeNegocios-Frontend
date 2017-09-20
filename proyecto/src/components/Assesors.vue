@@ -6,7 +6,7 @@
 				<div class = "ui big message">
 					Mis empresas
 				</div>
-				<div class = "ui two cards">
+				<div class = "ui two cards" style="overflow-y:scroll;max-height: 400px;">
 					<div class = "ui fluid card" v-for = "element of myBusiness" v-on:click = "getAssesors(element)">
 					<div class="ui black ribbon label">{{element.name}}</div>
 						<div class="image">
@@ -33,7 +33,7 @@
 				<div class = "ui big message">
 					Asesores Disponibles
 				</div>
-				<div class = "ui two cards">
+				<div class = "ui two cards" style="overflow-y:scroll;height: 400px;">
 					<div class = "ui card" v-for= "assesor in assesors">
 						<div class = "ui black ribbon label">
 							{{assesor.name}}

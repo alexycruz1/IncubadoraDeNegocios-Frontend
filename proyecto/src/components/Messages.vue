@@ -2,11 +2,11 @@
 	<div id = "Messages">
 		<div class = "ui center aligned grid">
 			<div class = "one wide column"></div>
-			<div class = "six wide column">
-				<div class = "ui big message">
+			<div class = "six wide column" id = "cd">
+				<div class = "ui big message" style = "">
 					Contactos
 				</div>
-				<div class = "ui two cards">
+				<div class = "ui two cards" style="overflow-y:scroll;height: 200px;">
 					<div class = "ui fluid card" v-for = "u in otherUsers" v-on:click = "selectPerson(u)">
 						<div class = "ui black ribbon label">
 							{{u.name}}
@@ -14,16 +14,14 @@
 						<div class = "image">
 							<img v-bind:src="u.image">
 						</div>
-						
 						<div class = "extra content">
-							
 						</div>
 					</div>
 				</div>
 				<div class = "ui big message">
 					Grupos
 				</div>
-				<div class = "ui two cards">
+				<div class = "ui two cards" style="overflow-y:scroll;height: 200px;">
 					<div class = "ui fluid card" v-for = "group in myGroups" v-on:click = "selectGroup(group)">
 						<div class = "ui black ribbon label">
 							{{group.name}}
@@ -42,11 +40,11 @@
 				<div class = "ui vertical divider"></div>
 			</div>
 			<div class = "seven wide column">
-				<div class = "ui fluid floated segment" style="overflow-y:auto;white-space:nowrap;">
+				<div class = "ui fluid floated segment" >
 					<div class = "ui big message">
 						Chat
 					</div>
-					<div class = "scrolling content" >
+					<div  id = "containerChat">
 						<div v-for = "item in array">
 							<div v-bind:class = "item.segment">
 								<div class = "ui top attached label">
@@ -239,7 +237,7 @@
 			prepareArray(){
 				this.array = [];
 				console.log('Entra');
-				for(let i = 0; i < this.currentMessages.length; i++){
+				for(let i = this.currentMessages.length-1; i >= 0; i--){
 					if(this.currentMessages[i].idEmisor === this.user.IDPerson){
 						this.array.push({
 							segment: 'ui right aligned clearing segment',
@@ -262,6 +260,7 @@
 					}
 				}
 				console.log(this.array);
+				this.ScrollToBottom();
 			},
 			hear(){
 				this.pubnub = new PubNub({
@@ -333,6 +332,12 @@
 			recieveMessage(message){
 				this.getAllChats();				
 				console.log('Recibi');
+			},
+			ScrollToBottom(){
+     			var element = document.getElementById("containerChat");
+     			console.log('Element: ', element);
+    			element.scrollTop =1000;
+    			console.log('Altura', 500);
 			}
 		}, 
 		beforeCreate(){
@@ -375,5 +380,11 @@
 </script>
 
 <style scoped>
-	
+	#containerChat{
+		overflow-y:scroll;
+		height: 350px;
+		display: flex;
+		flex-direction: column-reverse;
+	}
+
 </style>

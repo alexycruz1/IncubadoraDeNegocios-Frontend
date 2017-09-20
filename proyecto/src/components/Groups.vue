@@ -16,7 +16,7 @@
 					</div>
 					
 				</div>
-				<div class = "ui two cards">
+				<div class = "ui two cards" style="overflow-y:scroll;max-height: 400px;">
 					<div class = "ui fluid card" v-for = "group in groups" >
 						<div class = "ui black ribbon label">{{group.name}}</div>
 						<div class = "image" v-on:click = "showGroupInfo(group)">
@@ -49,7 +49,7 @@
 						</div>
 					</div>
 					<br><br><br>
-					<div class = "ui two cards">
+					<div class = "ui two cards" style="overflow-y:scroll;height: 200px;">
 						<div class = "ui fluid card" v-for = "user in usersOfCurrentGroup">
 							<div class = "ui fluid image">
 								<img v-bind:src="user.image">
@@ -72,7 +72,7 @@
 						</div>
 					</div>
 					<br><br><br>
-					<div class = "ui two cards">
+					<div class = "ui two cards" style="overflow-y:scroll;max-height: 300px;">
 						<div class = "ui fluid card" v-for = "event in eventsOfCurrentGroup">
 							<div class = "ui fluid image">
 								<img v-bind:src="event.image">

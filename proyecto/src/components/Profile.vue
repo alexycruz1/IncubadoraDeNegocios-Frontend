@@ -46,7 +46,7 @@
 				<div class = "ui big message" v-show = "user.isAdviser">
 					Empresas Asesoradas
 				</div>
-				<div class = "ui two cards">
+				<div class = "ui two cards" style="overflow-y:scroll;max-height: 400px;">
 					<div class = "ui fluid card" v-for = "element of listOfBusiness">
 						<div class="ui black ribbon label">{{element.name}}</div>
 						<div class="image">

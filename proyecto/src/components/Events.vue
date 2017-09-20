@@ -1,6 +1,6 @@
 <template>
 	<div id = "Events">
-
+	<br><br>
 		<div class = "ui center aligned grid">
 			<div class = "one wide column"></div>
 			<div class = "fourteen wide column">
@@ -142,7 +142,7 @@
  		 		</div>
 			</div>
 		</div>
-		<br>	
+		<br><br><br>	
 	</div>
 </template>
 
