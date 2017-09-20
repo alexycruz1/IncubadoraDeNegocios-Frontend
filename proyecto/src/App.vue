@@ -128,12 +128,13 @@
 
 <script>
 import personService from './services/personServices'
+console.log('Storage: ', localStorage.getItem('logged'));
 export default {
   name: 'app',
   data(){
   	return {
-  		logged: Boolean, 
-  		assesor: true,
+  		logged:  JSON.parse(localStorage.getItem('logged')), 
+  		assesor: JSON.parse(localStorage.getItem('isAdviser')),
       allSessions: [],
       allUsers: [],
 
@@ -172,6 +173,7 @@ export default {
           for(let i = 0; i < this.allUsers.length; i++){
             if(this.allUsers[i].username === this.username){
               localStorage.setItem('idUser', this.allUsers[i].IDPerson);
+              localStorage.setItem('isAdviser', this.allUsers[i].isAdviser);
               this.assesor = this.allUsers[i].isAdviser;
             }
           }
@@ -185,12 +187,11 @@ export default {
       }
   },
   beforeCreate(){
+    console.log('create');
     personService.getPeople().then(response =>{
           for(let i = 0; i < response.body.length; i++){
             this.allUsers.push(response.body[i]);
           }
-          this.logged = false;
-          localStorage.setItem('logged',false);
         }, response =>{
           alert('Error');
         });
