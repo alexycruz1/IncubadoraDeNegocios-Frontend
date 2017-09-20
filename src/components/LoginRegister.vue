@@ -233,7 +233,6 @@ export default {
 			this.businessRegistered = newBusiness;
 
 			businessService.createBusiness(newBusiness).then(response => {
-				alert('business created');
 
 				businessService.getAllBusiness().then(response => {
 					this.allBusiness = [];
@@ -253,9 +252,6 @@ export default {
 
 
 					personService.addBusiness({business: this.businessRegistered.idBusiness}, this.userRegistered.IDPerson).then(response => {
-					alert('business added to person');
-					console.log('Empresa: ' + this.businessRegistered.idBusiness);
-					console.log('Persona: ' + this.userRegistered.IDPerson);
 				}, response => {
 					alert('Error adding business to person');
 				});

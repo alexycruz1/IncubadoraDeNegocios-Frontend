@@ -208,14 +208,12 @@
 
 				personService.getPersonById(this.actualUser).then(response => {
 					this.user = response.body[0];
-					alert('user assigned');
 				}, response =>{
 					alert('Error');
 				});
 
 					eventService.createEvent(this.event).then(response => {
 						this.actualUser = localStorage.getItem('idUser');
-						alert('Event created');
 
 
 					eventService.getEvents().then(response =>{
@@ -225,13 +223,11 @@
 								this.allEvents.push(this.currentEvent);
 
 								personService.addEvent({event: this.currentEvent.IDEvent}, this.actualUser).then(response => {
-									alert('event added to person');
 								}, response => {
 									alert('Error');
 								});
 
 								eventService.addPersonToEvent({person: this.actualUser}, this.currentEvent.IDEvent).then(respone =>{
-									alert('person added to event');
 								}, response => {
 									alert('Error');
 								});
@@ -246,7 +242,6 @@
 					this.actualUser = localStorage.getItem('idUser');
 
 					personService.getPersonById(this.actualUser).then(response => {
-						alert('usuario encontrado');
 						this.user = response.body[0];
 
 						for(let i = 0; i < this.user.listOfEvents.length; i++){
@@ -277,7 +272,6 @@
 					this.actualUser = localStorage.getItem('idUser');
 					personService.deleteEvent({event:this.event.IDEvent}, this.actualUser).then(response => {
 						personService.getPersonById(this.actualUser).then(response => {
-						alert('usuario encontrado');
 						this.user = response.body[0];
 
 						for(let i = 0; i < this.user.listOfEvents.length; i++){
@@ -309,7 +303,6 @@
 					this.actualUser = localStorage.getItem('idUser');
 
 					personService.getPersonById(this.user.IDPerson).then(response => {
-						alert('usuario encontrado');
 						this.user = response.body[0];
 
 						for(let i = 0; i < this.user.listOfEvents.length; i++){

@@ -401,12 +401,10 @@
 				for(let i = 0; i < this.currentBusiness.idOwners.length; i++){
 					if(this.currentBusiness.idOwners[i] === element.IDPerson){
 						alreadyOwner = true;
-						alert('Ya es miembro');
 					}
 				}
 				if(!alreadyOwner){
 					this.newOwner = element;
-					alert('No Era Miemrbo');
 					this.modifyBusiness();
 				}
 				$('#usersM').modal('hide');
@@ -421,25 +419,21 @@
 				businessService.updateBusiness(this.currentBusiness,this.currentBusiness.idBusiness).then(response=>{
 					if(this.newOwner.IDPerson!=undefined){
 						businessService.addOwner({owner: this.newOwner.IDPerson},this.currentBusiness.idBusiness).then(response =>{
-							alert('Exito');
 						}, response => {
 							alert('Error');
 						});
 
 						personService.addBusiness({business: this.currentBusiness.idBusiness},this.newOwner.IDPerson).then(response =>{
-							alert('Exito');
 						}, response => {
 							alert('Error');
 						});
 					}
-					alert('Exito');
 				}, response => {
 					alert('Error');
 				});
 			},
 			modifyUser(){
 				personService.editPerson(this.currentUser,this.user.IDPerson).then(response=>{
-					alert('Exito');
 				}, response => {
 					alert('Error');
 				});
@@ -448,13 +442,11 @@
 				var obj = [{business: this.currentBusiness.idBusiness},{owner:this.user.IDPerson}];
 
 				businessService.removeOwner(obj[1],this.currentBusiness.idBusiness).then(response=>{
-					alert('Exito');
 				}, response => {
 					alert('Error');
 				});
 
 				personService.deleteBusiness(obj[0],this.user.IDPerson).then(response=>{
-					alert('Exito');
 				}, response => {
 					alert('Error');
 				});

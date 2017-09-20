@@ -138,7 +138,6 @@
                 var newAdvertisement = {name: this.title, description: this.description, image: input};
 
                 advertisementService.createAdvertisement(newAdvertisement).then(response => {
-                    alert('Ad created');
                     this.allAds = [];
                     
                     advertisementService.getAdvertisements().then(response => {
@@ -170,13 +169,11 @@
                 this.actualEvent = eventInHome;
 
 				personService.addEvent({event: this.actualEvent.IDEvent}, this.actualUser.IDPerson).then(response => {
-					alert('event added to person');
 				}, response => {
 					alert('Error');
 				});
 
 				eventService.addPersonToEvent({person: this.actualUser.IDPerson}, this.actualEvent.IDEvent).then(respone =>{
-					alert('person added to event');
 				}, response => {
 					alert('Error');
 				});
@@ -186,13 +183,11 @@
                 this.actualEvent = eventInHome;
 
                 personService.deleteEvent({event: this.actualEvent.IDEvent}, this.actualUser.IDPerson).then(response => {
-                    alert('event deleted from Person');
                 }, response => {
                     alert('Error removing event from person');
                 });
 
                 eventService.deletePersonInEvent({}, ).then(response => {
-                    alert('person deleted from event');
                 }, response => {
                     alert('Error removing person from event');
                 })
