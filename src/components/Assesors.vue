@@ -120,7 +120,6 @@
 				for(let i = 0; i < this.currentAssesor.listOfRequests; i++){
 					if(this.currentAssesor.listOfRequests[i] === this.currentBusiness.idBusiness){
 						existRequest = true;
-						alert('Ya envio la solicitud');
 					}
 				}
 				if(!existRequest){

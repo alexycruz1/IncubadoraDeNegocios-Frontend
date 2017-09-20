@@ -185,7 +185,6 @@
 				this.task.idAdviser = this.user.IDPerson;
 				this.task.idBusiness = this.currentBusiness.idBusiness;
 				taskService.createTask(this.task).then(response => {
-					alert('Guardado');
 					this.setTasks();
 				},response => {
 					alert('Error');
@@ -197,7 +196,6 @@
 			},
 			deleteTask(){
 				taskService.deleteTask(this.task.idTask).then(response => {
-					alert('Exito');
 					this.setTasks();
 				}, response => {
 					alert('Error');
@@ -205,7 +203,6 @@
 			},
 			modifyTask(){
 				taskService.updateTask(this.task,this.task.idTask).then(response => {
-					alert('Exito');
 					this.setTasks();
 				}, response => {
 					alert('Error');
@@ -215,7 +212,6 @@
 				this.task = this.verifyGroups(event);
 				this.task.date = event.start.format('YYYY/MM/DD');
 				taskService.updateTask(this.task,this.task.idTask).then(response => {
-					alert('Exito');
 					this.setTasks();
 				}, response => {
 					alert('Error');

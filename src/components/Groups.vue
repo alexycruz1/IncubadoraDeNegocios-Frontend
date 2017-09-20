@@ -415,12 +415,10 @@
 			quitGroup(){
 				this.showInfo = false;
 				personService.deleteGroup({group: this.currentGroup.idGroup},this.user.IDPerson).then(response => {
-					alert('Exito');
 					}, response => {
 						alert('Error');
 					});
 				groupService.removeMember({member: this.user.IDPerson},this.currentGroup.idGroup).then(response => {
-						alert('Exitos');
 						this.refreshCards();
 					}, response => {
 						alert('Error');
@@ -436,7 +434,6 @@
 				groupService.getGroupById(this.user.listOfGroups[i]).then(response => {
 					this.groups.push(response.body[0]);
 				}, response => {
-					alert('Error getting group');
 				});
 			}
 			}, response => {
@@ -523,12 +520,10 @@
 			addMember(element){
 				this.usersOfCurrentGroup = [];
 				personService.addGroup({group: this.currentGroup.idGroup}, element.IDPerson).then(response => {
-					alert('Exito');
 				}, response => {
 					alert('Error');
 				});
 				groupService.addMember({member: element.IDPerson},this.currentGroup.idGroup).then(response => {
-					alert('Exito');
 					this.refreshCards();
 				}, response => {
 					alert('Error');
@@ -539,12 +534,10 @@
 				groupService.createGroup(this.newGroup).then(response=>{
 					groupService.getAllGroups().then(response => {
 						personService.addGroup({group: response.body[response.body.length -1].idGroup}, this.user.IDPerson).then(response=>{
-							alert('Exito');
 						},response => {
 							alert('Error');
 						});
 						groupService.addMember({member: this.user.IDPerson},response.body[response.body.length -1].idGroup).then(response => {
-							alert('Exito');
 							this.refreshCards();
 						}, response => {
 							alert('Error');
@@ -573,7 +566,6 @@
 				eventService.createEvent(this.event).then(response => {
 						eventService.getEvents().then(response => {
 							groupService.addEvent({event: response.body[response.body.length-1].IDEvent},this.currentGroup.idGroup).then(response => {
-								alert('Agregado');
 								this.refreshCards();
 							},response => {
 								alert('Error');
@@ -581,8 +573,6 @@
 						}, response => {
 							alert('Error');
 						});
-						
-					alert('Exito');
 				}, response => {
 					alert('Error');
 				});
@@ -590,12 +580,10 @@
 			},
 			deleteEvent2(){
 				eventService.deleteEvent(this.event.IDEvent).then(response => {
-					alert('Eliminado');
 				}, response => {
 					alert('Error');
 				});
 				groupService.removeEvent({event: this.event.IDEvent}, this.currentGroup.idGroup).then(response => {
-					alert('Exito');
 					this.refreshCards();
 				},response => {
 					alert('Error');
@@ -607,7 +595,6 @@
 					this.event.image = input;
 				}
 				eventService.editEvent(this.event,this.event.IDEvent).then(response => {
-					alert('Exito');
 					this.refreshCards();
 				}, response => {
 					alert('Error');
@@ -635,13 +622,11 @@
 			}, 
 			addGroup(element){
 				groupService.addMember({member: this.user.IDPerson}, element.idGroup).then(response => {
-					alert('Exito');
 				}, response => {
 					alert('Error');
 				});
 
 				personService.addGroup({group: element.idGroup}, this.user.IDPerson).then(response => {
-					alert('Exito');
 					this.refreshCards();
 				}, response => {
 					alert('Error');
