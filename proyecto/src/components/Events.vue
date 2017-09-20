@@ -161,7 +161,8 @@
 					dateAndTime: '', 
 					image: '',
 					status: ''
-				}
+				},
+				actualUser: Number
 			}
 		}, 
 		methods:{
@@ -199,17 +200,19 @@
  					this.allEvents.pop();
 				}
 
-				personService.getPersonById(actualUser).then(response => {
+				this.actualUser = localStorage.getItem('idUser');
+
+				personService.getPersonById(this.actualUser).then(response => {
 					this.user = response.body[0];
 					alert('user assigned');
 				}, response =>{
 					alert('Error');
 				});
 
-				var newEvent = {IDEvent: Number, name: this.name, description: this.description, dateAndTime: Date, 
-					listOfPeople: [Number], status: this.status, image: input};
+				var newEvent = {name: this.name, description: this.description, dateAndTime: Date, status: this.status, image: input};
 
 					eventService.createEvent(newEvent).then(response => {
+						this.actualUser = localStorage.getItem('idUser');
 						alert('Event created');
 
 
@@ -219,13 +222,13 @@
 								this.currentEvent = response.body[i];
 								this.allEvents.push(this.currentEvent);
 
-								personService.addEvent({event: this.currentEvent.IDEvent}, actualUser).then(response => {
+								personService.addEvent({event: this.currentEvent.IDEvent}, this.actualUser).then(response => {
 									alert('event added to person');
 								}, response => {
 									alert('Error');
 								});
 
-								eventService.addPersonToEvent({person: actualUser}, this.currentEvent.IDEvent).then(respone =>{
+								eventService.addPersonToEvent({person: this.actualUser}, this.currentEvent.IDEvent).then(respone =>{
 									alert('person added to event');
 								}, response => {
 									alert('Error');
@@ -238,7 +241,9 @@
           				alert('Error');
         			});
 
-					personService.getPersonById(actualUser).then(response => {
+					this.actualUser = localStorage.getItem('idUser');
+
+					personService.getPersonById(this.actualUser).then(response => {
 						alert('usuario encontrado');
 						this.user = response.body[0];
 
@@ -266,8 +271,10 @@
 					for (var i = this.allEvents.length; i > 0; i--) {
  						this.allEvents.pop();
 					}
+
+					this.actualUser = localStorage.getItem('idUser');
 					
-					personService.getPersonById(actualUser).then(response => {
+					personService.getPersonById(this.actualUser).then(response => {
 						alert('usuario encontrado');
 						this.user = response.body[0];
 
@@ -295,6 +302,8 @@
  						this.allEvents.pop();
 					}
 
+					this.actualUser = localStorage.getItem('idUser');
+
 					personService.getPersonById(this.user.IDPerson).then(response => {
 						alert('usuario encontrado');
 						this.user = response.body[0];
@@ -320,10 +329,10 @@
 		},
 		beforeCreate(){
 
-			if(sessionStorage.getItem('userInfo') != undefined){
-				var actualUser = localStorage.getItem('idUser');
+			if(localStorage.getItem('idUser') != undefined){
+				this.actualUser = localStorage.getItem('idUser');
 
-				personService.getPersonById(actualUser).then(response => {
+				personService.getPersonById(this.actualUser).then(response => {
 					this.user = response.body[0];
 					console.log(this.user);
 					for(let i = 0; i < this.user.listOfEvents.length; i++){

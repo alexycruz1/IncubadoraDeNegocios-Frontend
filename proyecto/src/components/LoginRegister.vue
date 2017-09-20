@@ -108,7 +108,8 @@ export default {
 	data(){
 		return {
 			userRegistered: Object,
-			allBusiness: []	
+			allBusiness: [],
+			businessRegistered: Object
 		}
 	},
   methods: {
@@ -130,12 +131,26 @@ export default {
 			$('#createBusiness').modal('show');
 		},
       Register(){
-		var newUser = {IDPerson: Number, username: this.username, password: this.password, scope: ["admin"], name: this.firstName + " " + this.lastName, age: "", 
-					email: this.email, phone: "", profession: "", address: "", image: "img/fondo2.jpg", isAdviser: this.adviser, listOfFriends: [Number], 
-					listOfGroups: [Number], listOfEvents: [Number], listOfBusiness: [Number]};
+		var newUser = {username: this.username, password: this.password, scope: ["admin"], 
+						name: this.firstName + " " + this.lastName, age: "", email: this.email, 
+						phone: "", profession: "", address: "", image: "img/fondo2.jpg", 
+						isAdviser: this.adviser};
 
-					console.log(newUser);
+		console.log(newUser);
+
+		this.userRegistered = newUser;
+
 		personService.createPerson(newUser).then(response =>{
+			personService.getPeople().then(response => {
+				for(let i = 0; i < response.body.length; i++){
+					if(i === response.body.length - 1){
+						var tempUser = response.body[i];
+						localStorage.setItem('idUser', tempUser.IDPerson);
+					}
+				}
+			}, response => {
+
+			});
         }, response =>{
           	alert('Error');
         });
@@ -177,18 +192,53 @@ export default {
 				}		
 			}
 
-			var newBusiness = {idBusiness: Number, name: this.bName, code: bCode, location: this.bLocation, 
-							description: this.bDescription, image: input, idOwners: [Number], tasks: [Number]};
+			var newBusiness = {name: this.bName, code: bCode, location: this.bLocation, 
+							description: this.bDescription, image: input};
 
-			newBusiness.idOwners.push(this.userRegistered.IDPerson);
+			this.businessRegistered = newBusiness;
 
 			businessService.createBusiness(newBusiness).then(response => {
 				alert('business created');
 
-				personService.addBusiness({business: newBusiness.idBusiness}, userRegistered.IDPerson).then(response => {
+				businessService.getAllBusiness().then(response => {
+					this.allBusiness = [];
+
+					for(let i = 0; i < response.body.length; i++){
+						if(i === response.body.length - 1){
+							this.businessRegistered = response.body[i];
+						}
+					}
+
+					personService.getPeople().then(response => {
+					for(let i = 0; i < response.body.length; i++){
+						if(i === response.body.length - 1){
+							this.userRegistered = response.body[i];
+						}
+					}
+
+
+					personService.addBusiness({business: this.businessRegistered.idBusiness}, this.userRegistered.IDPerson).then(response => {
 					alert('business added to person');
+					console.log('Empresa: ' + this.businessRegistered.idBusiness);
+					console.log('Persona: ' + this.userRegistered.IDPerson);
 				}, response => {
 					alert('Error adding business to person');
+				});
+
+				businessService.addOwner({owner: this.userRegistered.IDPerson}, this.businessRegistered.idBusiness).then(response => {
+					alert('Owner added to business');
+					console.log('Empresa: ' + this.businessRegistered.idBusiness);
+					console.log('Persona: ' + this.userRegistered.IDPerson);
+				}, response => {
+					alert('Owner cant be added');
+				});
+				}, response => {
+					alert('person cant be found');
+				});
+
+				
+				}, response => {
+					alert('business cant be found');
 				});
 			}, response => {
 				alert('Error creating business');

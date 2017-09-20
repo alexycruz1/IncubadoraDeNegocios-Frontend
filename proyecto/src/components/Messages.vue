@@ -139,6 +139,7 @@
 					this.hear();
 				}else{
 					console.log('Chat no existe',this.user.IDPerson);
+					console.log(this.allChats);
 					chatService.createChat({
 						listOfPeople: this.user.IDPerson
 					}).then(response => {
