@@ -42,11 +42,11 @@
 				<div class = "ui vertical divider"></div>
 			</div>
 			<div class = "seven wide column">
-				<div class = "ui fluid floated segment">
+				<div class = "ui fluid floated segment" style="overflow-y:auto;white-space:nowrap;">
 					<div class = "ui big message">
 						Chat
 					</div>
-					<div class = "scrolling content">
+					<div class = "scrolling content" >
 						<div v-for = "item in array">
 							<div v-bind:class = "item.segment">
 								<div class = "ui top attached label">
@@ -108,6 +108,7 @@
 			belongToGroup(chat){
 				for(let i = 0; i < this.myGroups.length; i++){
 					if(chat.IDChat === this.myGroups[i].idChat){
+						console.log('Se metio con: ',chat.IDChat);
 						return true;
 					}
 				}
@@ -119,9 +120,12 @@
 				this.currentUser = element;
 				this.currentMessages = [];
 				for(let i = 0; i < this.allChats.length; i++){
-					if(this.verifyChat(this.user.IDPerson,this.allChats[i]) && this.verifyChat(element.IDPerson,this.allChats[i]) && !this.belongToGroup(this.allChats[i])){
-						existChat = true;
-						this.currentChat = this.allChats[i];
+					if(this.verifyChat(this.user.IDPerson,this.allChats[i]) && this.verifyChat(element.IDPerson,this.allChats[i])){
+						if(this.belongToGroup(this.allChats[i]) ===false){
+							console.log('Entro con: ', this.allChats[i]);
+							existChat = true;
+							this.currentChat = this.allChats[i];
+						}
 					}
 				}
 				if(existChat){
@@ -143,7 +147,11 @@
 					chatService.createChat({
 						listOfPeople: this.user.IDPerson
 					}).then(response => {
-						chatService.addPersonToChat({listOfPeople: this.currentUser.IDPerson},this.allChats[this.allChats.length-1].IDChat + 1).then(response => {
+						var id = 1;
+						if(!(this.allChats.length === 0)){
+							id = this.allChats[this.allChats.length-1].IDChat + 1;
+						}
+						chatService.addPersonToChat({listOfPeople: this.currentUser.IDPerson},id).then(response => {
 							chatService.getChats().then(response => {
 								this.allChats = response.body;
 								this.currentChat = this.allChats[this.allChats.length-1];

@@ -118,7 +118,8 @@
 					idBusiness: 0
 				},
 				showButton:false,
-				currentBusiness:{}
+				currentBusiness:{},
+				alreadyMounted:false
 			}
 		},
 		methods: {
@@ -128,32 +129,38 @@
 				this.realTasks = [];
 				this.currentBusiness = element;
 
-				taskService.getTasksByBusiness(element.idBusiness).then(response => {
-					this.realTasks = response.body;
-						for(let i = 0; i < response.body.length; i++){
-								this.currentTasks.push({
-									title: response.body[i].activity,
-									start: response.body[i].date
-								});
-						}
+				if(!this.alreadyMounted){
+					this.alreadyMounted = true;
+					taskService.getTasksByBusiness(element.idBusiness).then(response => {
+						this.realTasks = response.body;
+							for(let i = 0; i < response.body.length; i++){
+									this.currentTasks.push({
+										title: response.body[i].activity,
+										start: response.body[i].date
+									});
+							}
 
-						console.log(response.body);
-						$('#calendar').fullCalendar({
-							header: {
-								left: 'prev,next today',
-								center: 'title',
-								right: 'month,basicWeek,basicDay'
-							},
-							navlinks: true,
-							editable: true,
-							events: this.currentTasks,
-							eventClick: this.showOptions,
-							dayClick: this.showNewTaskModal,
-							eventDrop: this.changeDate
-						});
-				}, response =>{
-					alert('Error');
-				});
+							console.log(response.body);
+							$('#calendar').fullCalendar({
+								header: {
+									left: 'prev,next today',
+									center: 'title',
+									right: 'month,basicWeek,basicDay'
+								},
+								navlinks: true,
+								editable: true,
+								events: this.currentTasks,
+								eventClick: this.showOptions,
+								dayClick: this.showNewTaskModal,
+								eventDrop: this.changeDate
+							});
+					}, response =>{
+						alert('Error');
+					});
+				}else{
+					this.alreadyMounted = false;
+					this.setTasks();
+				}
 			},
 			showNewTaskModal(date){
 				this.task.activity = '';

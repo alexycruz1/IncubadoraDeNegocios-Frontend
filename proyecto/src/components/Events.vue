@@ -16,7 +16,7 @@
 				<div class = "ui four cards">
 					<div class = "ui fluid card" v-for = "event in allEvents">
 						<div class = "image">
-							<img id = "eventImage2" src = "img/imageNo.jpg">
+							<img id = "eventImage2" v-bind:src = "event.image">
 						</div>
 						<div class = "content">
 							<div class = "header">{{event.name}}</div>
@@ -52,19 +52,19 @@
 					<div class = "ui form">
 						<div class = "field">
 							<label>Nombre: </label>
-							<input type="text" placeholder= "nombre" v-model = "name">
+							<input type="text" placeholder= "nombre" v-model = "event.name">
 						</div>
 						<div class = "field">
 							<label>Estado: </label>
-							<input type="text" placeholder= "estado" v-model  = "status">
+							<input type="text" placeholder= "estado" v-model  = "event.status">
 						</div>
 						<div class = "field">
 							<label>descripcion: </label>
-							<input type="text" placeholder= "Descripcion" v-model  = "description">
+							<input type="text" placeholder= "Descripcion" v-model  = "event.description">
 						</div>
 						<div class = "field">
 							<label>Fecha: </label>
-							<input type="text" placeholder= "Fecha" v-model  = "dateAndTime">
+							<input type="text" placeholder= "Fecha" v-model  = "event.dateAndTime">
 						</div>
 					</div>
 				</div>
@@ -91,7 +91,7 @@
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
 					<div class = "ui medium image">
-						<img src="img/fondo2.jpg">
+						<img v-bind:src="event.image">
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -175,13 +175,14 @@
 				input.setAttribute("type", "file");
 				input.click();
 
-				input.onchange = function () {
-					input = this.value;
-					input = input.substring(12, input.length);
-					input = "img/" + input;
-
-					$("#eventImage").attr("src", input);	
-				};
+				input.onchange = this.setImage
+			},
+			setImage(){
+				input = input.value;
+				input = input.substring(12, input.length);
+				input = "img/" + input;
+				this.event.image;
+				$("#eventImage").attr("src", input);
 			},
 			showCreateEventModal(){
 				$("#eventImage").attr("src", "img/imageNo.jpg");
@@ -212,9 +213,7 @@
 					alert('Error');
 				});
 
-				var newEvent = {name: this.name, description: this.description, dateAndTime: Date, status: this.status, image: input};
-
-					eventService.createEvent(newEvent).then(response => {
+					eventService.createEvent(this.event).then(response => {
 						this.actualUser = localStorage.getItem('idUser');
 						alert('Event created');
 
@@ -276,8 +275,8 @@
 					}
 
 					this.actualUser = localStorage.getItem('idUser');
-					
-					personService.getPersonById(this.actualUser).then(response => {
+					personService.deleteEvent({event:this.event.IDEvent}, this.actualUser).then(response => {
+						personService.getPersonById(this.actualUser).then(response => {
 						alert('usuario encontrado');
 						this.user = response.body[0];
 
@@ -289,11 +288,13 @@
 								alert('Error');
 							});
 						}
-
 					}, response => {
 						alert('Error');
 					});
-
+					}, response => {
+						alert('Error');
+					})
+					
 					alert('Eliminado');
 				}, response => {
 					alert('Error');

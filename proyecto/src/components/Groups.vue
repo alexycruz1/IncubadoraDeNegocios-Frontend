@@ -141,7 +141,7 @@
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
 					<div class = "ui medium image" v-on:click = "uploadImg()">
-						<img v-bind:src="newGroup.image">
+						<img v-bind:src="newGroup.image" id = "cGroups">
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -176,7 +176,7 @@
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
 					<div class = "ui medium image" v-on:click = "uploadImg2()">
-						<img v-bind:src="currentGroup.image"> 
+						<img v-bind:src="currentGroup.image" id = "mGroups"> 
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -203,7 +203,7 @@
     			</div>
 			</div>
 		</div>
-		<div class = "ui modal" id = "createEvent">
+		<div class = "ui modal" id = "createEvent2">
 			<i class = "close icon"></i>
 			<div class = "header">
 				Creacion de Eventos
@@ -211,7 +211,7 @@
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
 					<div class = "ui medium image" v-on:click = "uploadImg3()">
-						<img v-bind:src="event.image">
+						<img v-bind:src="event.image" id = "cEvents">
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -240,13 +240,13 @@
 				<div class="ui black deny button">
       				Cancelar
     			</div>
-    			<div class="ui positive right labeled icon button" v-on:click = "createEvent()">
+    			<div class="ui positive right labeled icon button" v-on:click = "createEvent2()">
       				Crear
       				<i class="checkmark icon"></i>
     			</div>
 			</div>
 		</div>
-		<div class = "ui mini modal" id = "quitEvent">
+		<div class = "ui mini modal" id = "quitEvent2">
 			<i class = "close icon"></i>
 			<div class = "header">Desea Eliminar?</div>
 			<div class = "extra content">
@@ -254,14 +254,14 @@
     				<div class="ui black deny button">
       					Cancelar
     				</div>
-    				<div class="ui red right labeled icon button" v-on:click = "deleteEvent()">
+    				<div class="ui red right labeled icon button" v-on:click = "deleteEvent2()">
       					Eliminar
       					<i class="checkmark icon"></i>
     				</div>
  		 		</div>
 			</div>
 		</div>
-		<div class = "ui modal" id = "modifyEvent">
+		<div class = "ui modal" id = "modifyEvent2">
 			<i class = "close icon"></i>
 			<div class = "header">
 				Modificacion de Eventos
@@ -269,7 +269,7 @@
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
 					<div class = "ui medium image" v-on:click = "uploadImg3()">
-						<img v-bind:src="event.image">
+						<img v-bind:src="event.image" id = "mEvents">
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -298,7 +298,7 @@
 				<div class="ui black deny button">
       				Cancelar
     			</div>
-    			<div class="ui positive right labeled icon button" v-on:click = "modifyEvent()">
+    			<div class="ui positive right labeled icon button" v-on:click = "modifyEvent2()">
       				Modificar
       				<i class="checkmark icon"></i>
     			</div>
@@ -343,7 +343,7 @@
 				allUsers: [],
 				allGroups: [],
 				newGroup: {
-					image: '', 
+					image: 'img/fondo.jpg', 
 					name: '',
 					state: ''
 				},
@@ -351,9 +351,10 @@
 					name: '',
 					description: '',
 					dateAndTime: '', 
-					image: '',
+					image: 'img/fondo.jpg',
 					status: ''
-				}
+				}, 
+				lookedForImage: false
 			}
 		}, 
 		methods:{
@@ -369,7 +370,7 @@
 				input = 'img/' + input;
 				console.log('Input: ', input);
 				this.newGroup.image = input;
-				$("#businessImage").attr("src", input);
+				$("#cGroups").attr("src", input);
 			},
 			uploadImg2(){
 				input = document.createElement("INPUT");
@@ -382,8 +383,8 @@
 				input = input.substring(12, input.length);
 				input = 'img/' + input;
 				console.log('Input: ', input);
-				this.currentGroup.image = input;
-				$("#businessImage").attr("src", input);
+				this.lookedForImage = true;
+				$("#mGroups").attr("src", input);
 			},
 			uploadImg3(){
 				input = document.createElement("INPUT");
@@ -396,8 +397,9 @@
 				input = input.substring(12, input.length);
 				input = 'img/' + input;
 				console.log('Input: ', input);
-				this.event.image = input;
-				$("#businessImage").attr("src", input);
+				this.lookedForImage = true;
+				$("#cEvents").attr("src", input);
+				$("#mEvents").attr("src", input);
 			},
 			quitGroup(){
 				this.showInfo = false;
@@ -475,16 +477,16 @@
 				$('#modify').modal('show');
 			},
 			showCreateEventModal(){
-				$('#createEvent').modal('show');
+				$('#createEvent2').modal('show');
 			},
 
 			showDeleteEventModal(element){
 				this.event = element;
-				$('#quitEvent').modal('show');
+				$('#quitEvent2').modal('show');
 			},
 			showModifyEventModal(element){
 				this.event = element;
-				$('#modifyEvent').modal('show');
+				$('#modifyEvent2').modal('show');
 			},
 			getAllUsers(){
 				personService.getPeople().then(response => {
@@ -544,6 +546,11 @@
 				});
 			},
 			modifyGroup(){
+				if(this.lookedForImage){
+					this.currentGroup.image = input;
+					this.lookedForImage = false;
+				}
+
 				groupService.updateGroup(this.currentGroup, this.currentGroup.idGroup).then(response=>{
 					alert('Exito');
 					this.refreshCards();
@@ -551,7 +558,7 @@
 					alert('Error');
 				});
 			},
-			createEvent(){
+			createEvent2(){
 				eventService.createEvent(this.event).then(response => {
 						eventService.getEvents().then(response => {
 							groupService.addEvent({event: response.body[response.body.length-1].IDEvent},this.currentGroup.idGroup).then(response => {
@@ -570,7 +577,7 @@
 				});
 
 			},
-			deleteEvent(){
+			deleteEvent2(){
 				eventService.deleteEvent(this.event.IDEvent).then(response => {
 					alert('Eliminado');
 				}, response => {
@@ -583,7 +590,11 @@
 					alert('Error');
 				})
 			},
-			modifyEvent(){
+			modifyEvent2(){
+				if(this.lookedForImage){
+					this.lookedForImage = false;
+					this.event.image = input;
+				}
 				eventService.editEvent(this.event,this.event.IDEvent).then(response => {
 					alert('Exito');
 					this.refreshCards();

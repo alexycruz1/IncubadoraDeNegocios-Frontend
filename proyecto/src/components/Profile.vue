@@ -94,15 +94,15 @@
 					<div class = "ui form">
 						<div class = "field">
 							<label><a >Nombre</a></label>
-							<input type="text" v-bind:value = "currentBusiness.name" v-model = "currentBusiness.name">
+							<input type="text"  v-model = "currentBusiness.name">
 						</div>
 						<div class = "field">
 							<label><a >Ubicacion</a></label>
-							<input type="text" v-bind:value="currentBusiness.location" v-model = "currentBusiness.location">
+							<input type="text" v-model = "currentBusiness.location">
 						</div>
 						<div class = "field">
 							<label><a >Descripcion</a></label>
-							<input type="text" v-bind:value="currentBusiness.description" v-model = "currentBusiness.description">
+							<input type="text"  v-model = "currentBusiness.description">
 						</div>
 					</div>
 				</div>
@@ -130,7 +130,7 @@
 				<div class = "seven wide column">
 					<div class = "image content">
 						<div class = "ui medium image" v-on:click = "uploadImg2()">
-							<img v-bind:src="currentUser.image" >
+							<img v-bind:src="currentUser.image" id = "uImage">
 						</div>
 					</div>
 				</div>
@@ -221,8 +221,8 @@
 			</div>
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
-					<div class = "ui medium image" v-on:click = "uploadImg()">
-						<img src="img/imageNo.jpg" id = "businessImage">
+					<div class = "ui medium image" v-on:click = "uploadImg3()">
+						<img v-bind:src="newBusiness.image" id = "businessImage1">
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -230,15 +230,15 @@
 					<div class = "ui form">
 						<div class = "field">
 							<label>Nombre:</label>
-							<input type="text" v-model = "currentBusiness.name">
+							<input type="text" v-model = "newBusiness.name">
 						</div>
 						<div class = "field">
 							<label>direccion:</label>
-							<input type="text" v-model = "currentBusiness.location">
+							<input type="text" v-model = "newBusiness.location">
 						</div>
 						<div class = "field">
 							<label>descripcion:</label>
-							<input type="text" v-model = "currentBusiness.description">
+							<input type="text" v-model = "newBusiness.description">
 						</div>
 					</div>
 				</div>
@@ -269,7 +269,13 @@
 				listOfBusiness: [],
 				user: {},
 				currentBusiness: {
-					image: '',
+					image: 'img/imageNo.jpg',
+					name: '', 
+					description: '',
+					location:''
+				},
+				newBusiness: {
+					image: 'img/imageNo.jpg',
 					name: '', 
 					description: '',
 					location:''
@@ -306,13 +312,30 @@
 				input = 'img/' + input;
 				console.log('Input: ', input);
 				this.currentUser.image = input;
-				console.log('Input2: ', this.currentBusiness.image);
-				$("#businessImage").attr("src", input);
+				console.log('Input2: ', this.currentUser.image);
+				$("#uImage").attr("src", input);
+			},
+			uploadImg3(){
+				input = document.createElement("INPUT");
+				input.setAttribute("type", "file");
+				input.click();
+				input.onchange = this.setImage3
+			},
+			setImage3(){
+				input = input.value;
+				input = input.substring(12, input.length);
+				input = 'img/' + input;
+				console.log('Input: ', input);
+				this.newBusiness.image = input;
+				console.log('Input2: ', this.newBusiness.image);
+				$("#businessImage1").attr("src", input);
 			},
 			showBusinessModal(element){
-				console.log('Empresa: ', element);
-				this.getAllUsers();
+				this.currentBusiness = {};
 				this.currentBusiness = element;
+				console.log('Empresa: ', element);
+				console.log('Empresa2: ', this.currentBusiness);
+				this.getAllUsers();
 				$('#empresa').modal('show');
 			},
 			showCreateBusinessModal(){
@@ -320,10 +343,10 @@
 			},
 			createBusiness(){
 				this.listOfBusiness = [];
-				console.log('NeBusiness: ',this.currentBusiness);
-				businessService.createBusiness(this.currentBusiness).then(response => {
+				console.log('NeBusiness: ',this.newBusiness);
+				businessService.createBusiness(this.newBusiness).then(response => {
 					businessService.getAllBusiness().then(response => {
-						console.log(response.body);
+						console.log('Response: ', response.body);
 						businessService.addOwner({owner: this.user.IDPerson}, response.body[response.body.length -1].idBusiness).then(response => {
 
 						}, response => {
