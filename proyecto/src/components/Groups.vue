@@ -140,8 +140,8 @@
 			</div>
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
-					<div class = "ui medium image">
-						<img src="img/fondo2.jpg">
+					<div class = "ui medium image" v-on:click = "uploadImg()">
+						<img v-bind:src="newGroup.image">
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -175,8 +175,8 @@
 			</div>
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
-					<div class = "ui medium image">
-						<img src="img/fondo2.jpg">
+					<div class = "ui medium image" v-on:click = "uploadImg2()">
+						<img v-bind:src="currentGroup.image"> 
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -210,8 +210,8 @@
 			</div>
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
-					<div class = "ui medium image">
-						<img src="img/fondo2.jpg">
+					<div class = "ui medium image" v-on:click = "uploadImg3()">
+						<img v-bind:src="event.image">
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -268,8 +268,8 @@
 			</div>
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
-					<div class = "ui medium image">
-						<img src="img/fondo2.jpg">
+					<div class = "ui medium image" v-on:click = "uploadImg3()">
+						<img v-bind:src="event.image">
 					</div>
 				</div>
 				<div class = "seven wide column">
@@ -329,7 +329,7 @@
 	import groupService from './../services/groupService'
 	import personService from './../services/personServices'
 	import eventService from './../services/EventService'
-	
+	var input = '';
 	export default{
 		name: 'groups', 
 		data(){
@@ -343,7 +343,7 @@
 				allUsers: [],
 				allGroups: [],
 				newGroup: {
-					image: 'img/fondo2.jpg', 
+					image: '', 
 					name: '',
 					state: ''
 				},
@@ -351,12 +351,54 @@
 					name: '',
 					description: '',
 					dateAndTime: '', 
-					image: 'img/fondo.jpg',
+					image: '',
 					status: ''
 				}
 			}
 		}, 
 		methods:{
+			uploadImg(){
+				input = document.createElement("INPUT");
+				input.setAttribute("type", "file");
+				input.click();
+				input.onchange = this.setImage
+			},
+			setImage(){
+				input = input.value;
+				input = input.substring(12, input.length);
+				input = 'img/' + input;
+				console.log('Input: ', input);
+				this.newGroup.image = input;
+				$("#businessImage").attr("src", input);
+			},
+			uploadImg2(){
+				input = document.createElement("INPUT");
+				input.setAttribute("type", "file");
+				input.click();
+				input.onchange = this.setImage2
+			},
+			setImage2(){
+				input = input.value;
+				input = input.substring(12, input.length);
+				input = 'img/' + input;
+				console.log('Input: ', input);
+				this.currentGroup.image = input;
+				$("#businessImage").attr("src", input);
+			},
+			uploadImg3(){
+				input = document.createElement("INPUT");
+				input.setAttribute("type", "file");
+				input.click();
+				input.onchange = this.setImage3
+			},
+			setImage3(){
+				input = input.value;
+				input = input.substring(12, input.length);
+				input = 'img/' + input;
+				console.log('Input: ', input);
+				this.event.image = input;
+				$("#businessImage").attr("src", input);
+			},
 			quitGroup(){
 				this.showInfo = false;
 				personService.deleteGroup({group: this.currentGroup.idGroup},this.user.IDPerson).then(response => {
