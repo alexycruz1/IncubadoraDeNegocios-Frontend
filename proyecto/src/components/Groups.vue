@@ -3,19 +3,32 @@
 		<div class = "ui center aligned grid">
 			<div class = "one wide column"></div>
 			<div class = "six wide column">
-				<div class = "ui big message">
-					Mis Grupos    
-					<div class = "ui right floated icon buttons">
-						<button class = "ui blue button" v-on:click = "showCreateGModal()">
-							<i class = "plus icon"></i>	
-						</button>
-						<div class = "ui vertical divider"></div>
-						<button class = "ui blue button" v-on:click = "showGroupsModal()">
-							<i class = "search icon"></i>	
-						</button>
+				<div class = "ui black segment">
+				
+					<div class = "ui left floated header">
+						<h1>Mis Grupos</h1>
 					</div>
-					
+
+
+					<div class = "ui right floated icon buttons">
+						<div class="ui icon buttons">
+	 		 				<button class="ui icon positive button" v-on:click = "showCreateGModal()">
+								<i class = "plus icon"></i>
+							</button>
+							<div class="or">
+							</div>
+							<button class="ui button" v-on:click = "showGroupsModal()">
+								<i class = "search icon"></i>
+							</button>
+						</div>
+					</div>
+
+					<div class = "spacedSegment"></div>
+
+
 				</div>
+
+
 				<div class = "ui two cards" style="overflow-y:scroll;max-height: 400px;">
 					<div class = "ui fluid card" v-for = "group in groups" >
 						<div class = "ui black ribbon label">{{group.name}}</div>
@@ -36,8 +49,12 @@
 				<div class = "ui vertical divider"></div>
 				</div>
 			<div class = "seven wide column">
-				<div class = "ui big message">
-					Informacion de Grupo
+				<div class = "ui black segment">
+					<div class = "ui left floated header">
+						<h1>Informacion de grupo</h1>
+					</div>
+
+					<div class = "spacedSegment"></div>
 				</div>
 				<div class = "ui fluid floated segment" v-show = "showInfo">
 					<div class = "ui top attached label">
@@ -656,5 +673,9 @@
 </script>
 
 <style scoped>
+
+.spacedSegment {
+	margin-bottom: 6%;
+}
 	
 </style>
