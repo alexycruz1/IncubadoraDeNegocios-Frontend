@@ -2,7 +2,8 @@
 	<div id = "Events">
 
 		<div class = "ui center aligned grid">
-			<div class = "six wide column">
+			<div class = "one wide column"></div>
+			<div class = "fourteen wide column">
 				<div class = "ui big message">
 					Mis eventos
 					<div class = "ui right floated icon buttons">
@@ -12,7 +13,27 @@
 					</div>
 				</div>
 
+				<div class = "ui four cards">
+					<div class = "ui fluid card" v-for = "event in allEvents">
+						<div class = "image">
+							<img id = "eventImage2" src = "img/imageNo.jpg">
+						</div>
+						<div class = "content">
+							<div class = "header">{{event.name}}</div>
+								<div class = "meta">
+									<a>{{event.status}}</a>
+								</div>
+							</div>
+							<div class="extra content">
+      							<div class="ui two buttons">
+        							<div class="ui basic green button" v-on:click = "modifyEventModal(event)">Modificar</div>
+        							<div class="ui basic red button" v-on:click = "deleteEventModal(event)">Eliminar</div>
+      							</div>	  
+    						</div>
+					</div>
+				</div>
 			</div>
+			<div class = "one wide column"></div>
 		</div>
 
 		<div class = "ui modal" id = "createEvent">
@@ -59,25 +80,7 @@
 			</div>
 		</div>
 
-		<div class = "ui four cards">
-			<div class = "ui fluid card" v-for = "event in allEvents">
-				<div class = "image">
-					<img id = "eventImage2" src = "img/imageNo.jpg">
-				</div>
-				<div class = "content">
-					<div class = "header">{{event.name}}</div>
-					<div class = "meta">
-						<a>{{event.status}}</a>
-					</div>
-				</div>
-				<div class="extra content">
-      				<div class="ui two buttons">
-        				<div class="ui basic green button" v-on:click = "modifyEventModal(event)">Modificar</div>
-        				<div class="ui basic red button" v-on:click = "deleteEventModal(event)">Eliminar</div>
-      				</div>	  
-    			</div>
-			</div>
-		</div>
+		
 
 
 		<div class = "ui modal" id = "modifyEvent">
