@@ -11,9 +11,11 @@
     <div class="ui action input">
       <input v-model="username" type="text" placeholder="Nombre de usuario">
       <input v-model="password" type="password" placeholder="Contraseña">
-      <button class="ui primary button" v-on:click = "LogIn()">
-        Inicar Sesion
-      </button>
+      <router-link to = "/">
+        <button class="ui primary button" v-on:click = "LogIn()">
+          Inicar Sesion
+        </button>
+      </router-link>
     </div>
   </div>
 </div>
@@ -133,7 +135,8 @@ export default {
   		logged: Boolean, 
   		assesor: true,
       allSessions: [],
-      allUsers: []
+      allUsers: [],
+
   	}
   },
   methods: {
@@ -165,6 +168,7 @@ export default {
         if(res){
           this.logged = true;
           localStorage.setItem('logged', true);
+          this.$router.push({path: "/home"});
           for(let i = 0; i < this.allUsers.length; i++){
             if(this.allUsers[i].username === this.username){
               localStorage.setItem('idUser', this.allUsers[i].IDPerson);
