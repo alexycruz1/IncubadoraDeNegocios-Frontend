@@ -4,7 +4,7 @@
         <div class = "ui grid">
             <div class = "one wide column">
             </div> 
-            <div class="ui link cards">
+            <div class="ui cards">
                 <div class="card">
                     <div class="image">
                         <img v-bind:src = "actualUser.image">
@@ -26,7 +26,7 @@
                         </span>
                         <span>
                             <i class="calendar outline icon"></i>
-                                
+                            {{actualUser.listOfEvents.length}}
                         </span>
                     </div>
                 </div>
@@ -180,8 +180,14 @@
 				});
 			},
 
-            quitEvent(){
-                
+            quitEvent(eventInHome){
+                this.actualEvent = eventInHome;
+
+                personService.deleteEvent({event: this.actualEvent.IDEvent}, this.actualUser.IDPerson).then(response => {
+                    alert('event deleted from Person');
+                }, response => {
+                    alert('Error removing event from person');
+                });
             }
         },
 
