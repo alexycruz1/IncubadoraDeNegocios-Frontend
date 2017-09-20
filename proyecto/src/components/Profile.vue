@@ -85,7 +85,7 @@
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
 					<div class = "image content">
-						<div class = "ui medium image">
+						<div class = "ui medium image" v-on:click = "uploadImg()">
 							<img v-bind:src="currentBusiness.image">
 						</div>
 					</div>
@@ -129,8 +129,8 @@
 			<div class = "ui center aligned grid">
 				<div class = "seven wide column">
 					<div class = "image content">
-						<div class = "ui medium image">
-							<img v-bind:src="currentUser.image">
+						<div class = "ui medium image" v-on:click = "uploadImg2()">
+							<img v-bind:src="currentUser.image" >
 						</div>
 					</div>
 				</div>
@@ -230,15 +230,15 @@
 					<div class = "ui form">
 						<div class = "field">
 							<label>Nombre:</label>
-							<input type="text" v-model = "newBusiness.name">
+							<input type="text" v-model = "currentBusiness.name">
 						</div>
 						<div class = "field">
 							<label>direccion:</label>
-							<input type="text" v-model = "newBusiness.location">
+							<input type="text" v-model = "currentBusiness.location">
 						</div>
 						<div class = "field">
 							<label>descripcion:</label>
-							<input type="text" v-model = "newBusiness.description">
+							<input type="text" v-model = "currentBusiness.description">
 						</div>
 					</div>
 				</div>
@@ -268,31 +268,46 @@
 				allUsers: [],
 				listOfBusiness: [],
 				user: {},
-				currentBusiness: Object,
-				currentUser:Object,
-				newOwner: Object,
-				newBusiness: {
+				currentBusiness: {
 					image: '',
-					name: '',
+					name: '', 
 					description: '',
-					location: ''
-				}
+					location:''
+				},
+				currentUser:Object,
+				newOwner: Object
 			};
 		},
 		methods: {
 			uploadImg(){
-
-		input = document.createElement("INPUT");
-		input.setAttribute("type", "file");
-		input.click();
-
-		input.onchange = function () {
-			input = this.value;
-			input = input.substring(12, input.length);
-			input = 'img/' + input;
-			$("#businessImage").attr("src", input);	
-			};
-			this.newBusiness.image = 'img/fondo.jpg';
+				input = document.createElement("INPUT");
+				input.setAttribute("type", "file");
+				input.click();
+				input.onchange = this.setImage
+			},
+			setImage(){
+				input = input.value;
+				input = input.substring(12, input.length);
+				input = 'img/' + input;
+				console.log('Input: ', input);
+				this.currentBusiness.image = input;
+				console.log('Input2: ', this.currentBusiness.image);
+				$("#businessImage").attr("src", input);
+			},
+			uploadImg2(){
+				input = document.createElement("INPUT");
+				input.setAttribute("type", "file");
+				input.click();
+				input.onchange = this.setImage2
+			},
+			setImage2(){
+				input = input.value;
+				input = input.substring(12, input.length);
+				input = 'img/' + input;
+				console.log('Input: ', input);
+				this.currentUser.image = input;
+				console.log('Input2: ', this.currentBusiness.image);
+				$("#businessImage").attr("src", input);
 			},
 			showBusinessModal(element){
 				console.log('Empresa: ', element);
@@ -305,8 +320,8 @@
 			},
 			createBusiness(){
 				this.listOfBusiness = [];
-				console.log('NeBusiness: ',this.newBusiness);
-				businessService.createBusiness(this.newBusiness).then(response => {
+				console.log('NeBusiness: ',this.currentBusiness);
+				businessService.createBusiness(this.currentBusiness).then(response => {
 					businessService.getAllBusiness().then(response => {
 						console.log(response.body);
 						businessService.addOwner({owner: this.user.IDPerson}, response.body[response.body.length -1].idBusiness).then(response => {
