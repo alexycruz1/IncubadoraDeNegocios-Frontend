@@ -3,8 +3,8 @@
         <br>
         <div class = "ui grid">
             <div class = "one wide column">
-            </div> 
-            <div class="ui cards">
+            </div>
+            <div class="ui link cards" >
                 <div class="card">
                     <div class="image">
                         <img v-bind:src = "actualUser.image">
@@ -188,6 +188,12 @@
                 }, response => {
                     alert('Error removing event from person');
                 });
+
+                eventService.deletePersonInEvent({}, ).then(response => {
+                    alert('person deleted from event');
+                }, response => {
+                    alert('Error removing person from event');
+                })
             }
         },
 
