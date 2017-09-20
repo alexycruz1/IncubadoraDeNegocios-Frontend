@@ -4,52 +4,66 @@
 		<div class = "TopSpace">
 		</div>
 
-		<div class="ui centered card">
-  			<div class="content">
-    			<h2>Be great at what you do</h2>
-				<h4 class = "centerTitles">Get started - it's free.</h4>
-  			</div>
+		<div class = "ui one column centered grid">
+			<div class = "ten wide column">
+				<div class = "ui two centered cards">
+					<div class="ui centered card">
+  						<div class="content">
+    						<h2>Be great at what you do</h2>
+							<h4 class = "centerTitles">Get started - it's free.</h4>
+  						</div>
   			
-			<div class="content">
+						<div class="content">
+    						<div class="ui large left icon input SpaceBetweenDivs">
+      							<i class="user icon"></i>
+      							<input v-model="firstName" type="text" placeholder="Primer Nombre">
+    						</div>
 
-    			<div class="ui large left icon input SpaceBetweenDivs">
-      				<i class="user icon"></i>
-      				<input v-model="firstName" type="text" placeholder="Primer Nombre">
-    			</div>
+							<div class="ui large left icon input SpaceBetweenDivs">
+      							<i class="user icon"></i>
+      							<input v-model="lastName" type="text" placeholder="Primer Apellido">
+    						</div>
 
-				<div class="ui large left icon input SpaceBetweenDivs">
-      				<i class="user icon"></i>
-      				<input v-model="lastName" type="text" placeholder="Primer Apellido">
-    			</div>
+							<div class="ui large left icon input SpaceBetweenDivs">
+      							<i class="user icon"></i>
+      							<input v-model="email" type="text" placeholder="Correo electronico">
+    						</div>
 
-				<div class="ui large left icon input SpaceBetweenDivs">
-      				<i class="user icon"></i>
-      				<input v-model="email" type="text" placeholder="Correo electronico">
-    			</div>
+							<div class="ui large left icon input SpaceBetweenDivs">
+      							<i class="user icon"></i>
+      							<input v-model="username" type="text" placeholder="Nombre de usuario">
+    						</div>
 
-				<div class="ui large left icon input SpaceBetweenDivs">
-      				<i class="user icon"></i>
-      				<input v-model="username" type="text" placeholder="Nombre de usuario">
-    			</div>
+							<div class="ui large left icon input SpaceBetweenDivs">
+      							<i class="user icon"></i>
+      							<input v-model="password" type="password" placeholder="Contraseña">
+    						</div>
 
-				<div class="ui large left icon input SpaceBetweenDivs">
-      				<i class="user icon"></i>
-      				<input v-model="password" type="password" placeholder="Contraseña">
-    			</div>
+							<div class="ui action input SpaceBetweenDivs">
+  								<input type="text" disabled="" id = "ProfileImageInput">
+  								<button class="ui teal right labeled icon button" v-on:click = "uploadProfileImage()">
+    								<i class="image icon"></i>
+    									Upload
+  								</button>
+							</div>
 
-				<div class="ui toggle checkbox SpaceBetweenDivs">
-  					<input v-model="adviser" type="checkbox" name="public">
-  					<label>Asesor</label>
+							<div class="ui toggle checkbox SpaceBetweenDivs">
+  								<input v-model="adviser" type="checkbox" name="public">
+  								<label>Asesor</label>
+							</div>
+
+							<div class = "SpaceBetweenButton">
+								<button class="medium ui blue button" v-on:click = "Register()">
+ 									Registrarse!
+								</button>
+							</div>
+  						</div>
+					</div>
 				</div>
-
-				<div class = "SpaceBetweenButton">
-					<button class="medium ui blue button" v-on:click = "Register()">
- 						Registrarse!
-					</button>
-				</div>
-
-  			</div>
+			</div>
 		</div>
+
+		
 
 		<div class = "BottomSpace">
 		</div>
@@ -109,7 +123,8 @@ export default {
 		return {
 			userRegistered: Object,
 			allBusiness: [],
-			businessRegistered: Object
+			businessRegistered: Object,
+			profileImage: 'Click here to add a profile image'
 		}
 	},
   methods: {
@@ -127,14 +142,33 @@ export default {
 			$("#businessImage").attr("src", input);	
 		};
 	},
+	uploadProfileImage(){
+
+		input = document.createElement("INPUT");
+		input.setAttribute("type", "file");
+		input.click();
+
+		input.onchange = function () {
+			input = this.value;
+			input = input.substring(12, input.length);
+			input = "img/" + input;
+
+			this.profileImage = input;
+			document.getElementById('ProfileImageInput').value = this.profileImage;
+		};
+	},
 	showModal(){
 			$('#createBusiness').modal('show');
 		},
       Register(){
+
+		  if(this.isAdviser != true){
+			  this.isAdviser = false;
+		  }
+
 		var newUser = {username: this.username, password: this.password, scope: ["admin"], 
 						name: this.firstName + " " + this.lastName, age: "", email: this.email, 
-						phone: "", profession: "", address: "", image: "img/fondo2.jpg", 
-						isAdviser: this.adviser};
+						phone: "", profession: "", address: "", image: input, isAdviser: this.adviser};
 
 		console.log(newUser);
 
@@ -259,12 +293,12 @@ export default {
 
 	.SpaceBetweenDivs{
 		margin-bottom: 2%;
-		margin-left: 5%;
+		margin-left: 20%;
 	}
 
 	.SpaceBetweenButton {
 		margin-top: 5%;
-		margin-left: 25%;
+		margin-left: 35%;
 	}
 
 	.TopSpace {

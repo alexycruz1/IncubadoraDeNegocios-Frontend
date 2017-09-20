@@ -21,9 +21,11 @@
 
   	<div class="ui inverted large menu" v-show = "logged">
   		<div class="ui inverted secondary pointing menu">
-    		<a class="item">
+    		<router-link to = "/home">
+        <a class="item">
       			Inicio
     		</a>
+        </router-link>
         <router-link to = "/profile">
           <a class="item">
             Perfil
