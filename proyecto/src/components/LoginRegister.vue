@@ -175,6 +175,7 @@ export default {
 		this.userRegistered = newUser;
 
 		personService.createPerson(newUser).then(response =>{
+			console.log('La creo');
 			personService.getPeople().then(response => {
 				for(let i = 0; i < response.body.length; i++){
 					if(i === response.body.length - 1){
@@ -183,7 +184,7 @@ export default {
 					}
 				}
 			}, response => {
-
+				alert('Error getting people');
 			});
         }, response =>{
           	alert('Error');

@@ -3,14 +3,10 @@
 		<div class = "ui center aligned grid">
 			<div class = "one wide column"></div>
 			<div class = "six wide column">
-				<div class = "ui black segment">
 				
-					<div class = "ui left floated header">
-						<h1>Mis Grupos</h1>
-					</div>
-
-
-					<div class = "ui right floated icon buttons">
+					<div class = "ui big message">
+						Mis Grupos
+						<div class = "ui right floated icon buttons">
 						<div class="ui icon buttons">
 	 		 				<button class="ui icon positive button" v-on:click = "showCreateGModal()">
 								<i class = "plus icon"></i>
@@ -22,11 +18,9 @@
 							</button>
 						</div>
 					</div>
+					</div>
 
-					<div class = "spacedSegment"></div>
-
-
-				</div>
+					
 
 
 				<div class = "ui two cards" style="overflow-y:scroll;max-height: 400px;">

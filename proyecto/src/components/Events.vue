@@ -181,7 +181,7 @@
 				input = input.value;
 				input = input.substring(12, input.length);
 				input = "img/" + input;
-				this.event.image;
+				this.event.image = input;
 				$("#eventImage").attr("src", input);
 			},
 			showCreateEventModal(){

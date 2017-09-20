@@ -129,6 +129,7 @@
 <script>
 import personService from './services/personServices'
 console.log('Storage: ', localStorage.getItem('logged'));
+localStorage.setItem('logged',false);
 export default {
   name: 'app',
   data(){
@@ -136,8 +137,7 @@ export default {
   		logged:  JSON.parse(localStorage.getItem('logged')), 
   		assesor: JSON.parse(localStorage.getItem('isAdviser')),
       allSessions: [],
-      allUsers: [],
-
+      allUsers: []
   	}
   },
   methods: {
@@ -184,11 +184,15 @@ export default {
       ChangeSession(){
         this.logged = false;
         localStorage.setItem('logged', false);
+        localStorage.setItem('isAdviser', false);
       }
   },
   beforeCreate(){
     console.log('create');
     personService.getPeople().then(response =>{
+      
+        localStorage.setItem('logged', false);
+        localStorage.setItem('isAdviser', false);
           for(let i = 0; i < response.body.length; i++){
             this.allUsers.push(response.body[i]);
           }
