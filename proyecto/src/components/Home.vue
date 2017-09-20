@@ -24,9 +24,13 @@
                         <span class="right floated">
                             {{actualUser.email}}
                         </span>
-                        <span>
+                        <span v-if = "!emptyArray">
                             <i class="calendar outline icon"></i>
                             {{actualUser.listOfEvents.length}}
+                        </span>
+                        <span v-else-if = "emptyArray">
+                            <i class="calendar outline icon"></i>
+                            0
                         </span>
                     </div>
                 </div>
@@ -128,6 +132,7 @@
                 actualEvent: Object,
                 allEventsInHome: [],
                 allGroups: [],
+                emptyArray: Boolean
             }
         },
 
@@ -202,6 +207,11 @@
 
             personService.getPersonById(localStorage.getItem('idUser')).then(response => {
                 this.actualUser = response.body[0];
+                if(this.actualUser.listOfEvents === undefined){
+                    this.emptyArray = true;
+                }else{
+                    this.emptyArray = false;
+                }
             }, response => {
                 alert('Error getting person by ID');
             });
