@@ -36,7 +36,12 @@
 			</div>
 			<div class = "seven wide column">
 				<div class = "ui big message" v-show = "!user.isAdviser">
-					Perfil de Empresas
+					Perfil de Empresas 
+					<div class = "ui right floated icon buttons">
+						<button class = "ui blue button" v-on:click = "showCreateBusinessModal()">
+							<i class = "plus icon"></i>	
+						</button>
+					</div>
 				</div>
 				<div class = "ui big message" v-show = "user.isAdviser">
 					Empresas Asesoradas
@@ -208,13 +213,54 @@
 				</div>
 			</div>
 		</div>
+
+		<div class = "ui modal" id = "createBusiness">
+			<i class = "close icon"></i>
+			<div class = "header">
+				Agregar empresa
+			</div>
+			<div class = "ui center aligned grid">
+				<div class = "seven wide column">
+					<div class = "ui medium image" v-on:click = "uploadImg()">
+						<img src="img/imageNo.jpg" id = "businessImage">
+					</div>
+				</div>
+				<div class = "seven wide column">
+				<br><br><br>
+					<div class = "ui form">
+						<div class = "field">
+							<label>Nombre:</label>
+							<input type="text" v-model = "newBusiness.name">
+						</div>
+						<div class = "field">
+							<label>direccion:</label>
+							<input type="text" v-model = "newBusiness.location">
+						</div>
+						<div class = "field">
+							<label>descripcion:</label>
+							<input type="text" v-model = "newBusiness.description">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class = "actions">
+				<div class="ui black deny button">
+      				Cancelar
+    			</div>
+    			<div class="ui positive right labeled icon button" v-on:click = "createBusiness()">
+      				Crear
+      				<i class="checkmark icon"></i>
+    			</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script >
 	import personService from './../services/personServices'
 	import businessService from './../services/businessService'
-	
+	var input = 'nada';
+
 	export default {
 		name: 'profile',
 		data(){
@@ -224,15 +270,73 @@
 				user: {},
 				currentBusiness: Object,
 				currentUser:Object,
-				newOwner: Object
+				newOwner: Object,
+				newBusiness: {
+					image: '',
+					name: '',
+					description: '',
+					location: ''
+				}
 			};
 		},
 		methods: {
+			uploadImg(){
+
+		input = document.createElement("INPUT");
+		input.setAttribute("type", "file");
+		input.click();
+
+		input.onchange = function () {
+			input = this.value;
+			input = input.substring(12, input.length);
+			input = 'img/' + input;
+			$("#businessImage").attr("src", input);	
+			};
+			this.newBusiness.image = 'img/fondo.jpg';
+			},
 			showBusinessModal(element){
 				console.log('Empresa: ', element);
 				this.getAllUsers();
 				this.currentBusiness = element;
 				$('#empresa').modal('show');
+			},
+			showCreateBusinessModal(){
+				$('#createBusiness').modal('show');
+			},
+			createBusiness(){
+				this.listOfBusiness = [];
+				console.log('NeBusiness: ',this.newBusiness);
+				businessService.createBusiness(this.newBusiness).then(response => {
+					businessService.getAllBusiness().then(response => {
+						console.log(response.body);
+						businessService.addOwner({owner: this.user.IDPerson}, response.body[response.body.length -1].idBusiness).then(response => {
+
+						}, response => {
+							alert('Error');
+						});
+						personService.addBusiness({business: response.body[response.body.length -1].idBusiness},this.user.IDPerson).then(response => {
+							personService.getPersonById(this.user.IDPerson).then(response => {
+								this.user = response.body[0];
+
+								for(let i = 0; i < this.user.listOfBusiness.length; i++){
+									businessService.getBusinessById(this.user.listOfBusiness[i]).then(response => {
+										this.listOfBusiness.push(response.body[0]);
+									},response => {
+										alert('Error');
+									});
+								}
+							}, response => {
+								alert('ERROR');
+							});
+						}, response => {
+							alert('Error');
+						});
+					}, response => {
+						alert('Error');
+					});
+				}, response => {
+					alert('Error creating');
+				});
 			},
 			getAllUsers(){
 				this.allUsers = [];

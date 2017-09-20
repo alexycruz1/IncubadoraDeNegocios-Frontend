@@ -38,10 +38,11 @@ const router = new VueRouter({
 		component: Tasks
 	},
 	{
-		path: '/Events',
+		path: '/events',
 		name: 'Events',
 		component: Events
 	},
+	{
 		path: '/messages',
 		name: 'messages', 
 		component: Messages

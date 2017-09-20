@@ -139,7 +139,7 @@
  		 		</div>
 			</div>
 		</div>
-			
+		<br>	
 	</div>
 </template>
 
@@ -321,9 +321,7 @@
 		beforeCreate(){
 
 			if(sessionStorage.getItem('userInfo') != undefined){
-				var actualUser = sessionStorage.getItem('userInfo');
-				actualUser = JSON.parse(actualUser);
-				actualUser = actualUser[0].ID;
+				var actualUser = localStorage.getItem('idUser');
 
 				personService.getPersonById(actualUser).then(response => {
 					this.user = response.body[0];
