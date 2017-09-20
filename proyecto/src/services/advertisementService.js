@@ -2,11 +2,11 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
-var url = 'http://localhost:8000/';
+var url = 'http://localhost:8000/IDN/';
 
 export default {
     getAdvertisements() {
-        return Vue.http.get(url + 'getAdvertisements');
+        return Vue.http.get(url + 'Advertisements');
     },
 
     createAdvertisement(newAdvertisement) {

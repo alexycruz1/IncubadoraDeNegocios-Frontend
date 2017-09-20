@@ -13,6 +13,7 @@ import Events from './components/Events.vue'
 import Messages from './components/Messages.vue'
 import Assesors from './components/Assesors.vue'
 import Requests from './components/Requests.vue'
+import Home from './components/Home.vue'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -57,6 +58,11 @@ const router = new VueRouter({
 		path: '/requests',
 		name: 'requests', 
 		component: Requests
+	},
+	{
+		path: '/home',
+		name: 'home',
+		component: Home
 	}
 	]
 });
