@@ -120,7 +120,7 @@
 				for(let i = 0; i < this.allChats.length; i++){
 					if(this.verifyChat(this.user.IDPerson,this.allChats[i]) && this.verifyChat(element.IDPerson,this.allChats[i])){
 						if(this.belongToGroup(this.allChats[i]) ===false){
-							console.log('Entro con: ', this.allChats[i]);
+							//console.log('Entro con: ', this.allChats[i]);
 							existChat = true;
 							this.currentChat = this.allChats[i];
 						}
@@ -128,7 +128,7 @@
 				}
 				if(existChat){
 					console.log('Chat si existe');
-					console.log('chat: ', this.currentChat);
+					//console.log('chat: ', this.currentChat);
 					for(let i = 0; i < this.currentChat.listOfMessages.length; i++){
 						for(let k = 0; k < this.allMessages.length; k++){
 							if(this.allMessages[k].idMessage === this.currentChat.listOfMessages[i]){
@@ -136,7 +136,7 @@
 							}
 						}
 					}
-					console.log('Mensajes: ', this.currentMessages);
+					//console.log('Mensajes: ', this.currentMessages);
 					this.prepareArray();
 					this.hear();
 				}else{
@@ -193,7 +193,7 @@
 										this.hear();
 									}, response => {
 										alert('Error getting all chats');
-									})
+									});
 								}, response => {
 									alert('Error adding members real');
 								});
@@ -286,14 +286,15 @@
 			},
 			sendMessage(){
 				this.newMessage.idEmisor = this.user.IDPerson;
-
+				console.log('A enviar');
 				messageService.createMessage(this.newMessage).then(response => {
 					messageService.getAllMessages().then(response => {
+						console.log('Se supone que refrezco');
 						this.allMessages = response.body;
 						console.log('Mensajes',this.allMessages);
 						chatService.addMessageToChat({message: this.allMessages[this.allMessages.length -1].idMessage},this.currentChat.IDChat).then(response => {
 							this.pubnub.publish({
-								channel: 'chat' + this.currentChat.IDChat,
+								channel: 'chat2' + this.currentChat.IDChat,
 								message: this.newMessage.body 
 							},function(status,response){
 								console.log(status,response);
@@ -313,8 +314,10 @@
 				chatService.getChats().then(response => {
 					this.allChats = response.body;
 					if(this.personalChat){
+						console.log('EntreP')
 						this.selectPerson(this.currentUser);
 					}else{
+						console.log('EntreG');
 						this.selectGroup(this.currentGroup);	
 					}
 				}, response => {
@@ -330,13 +333,33 @@
 				});
 			},
 			recieveMessage(message){
-				this.getAllChats();				
-				console.log('Recibi');
+				this.currentMessages = [];
+				chatService.getChatByID(this.currentChat.IDChat).then(response => {
+					this.currentChat = response.body[0];
+					console.log('Chat: ', this.currentChat);
+					messageService.getAllMessages().then(response => {
+						this.allMessages = response.body;
+
+						for(let k = 0; k < this.currentChat.listOfMessages.length; k++){
+							for(let i = 0; i < this.allMessages.length; i++){
+								if(this.currentChat.listOfMessages[k] === this.allMessages[i].idMessage){
+									this.currentMessages.push(this.allMessages[i]);
+								}
+							}
+						}
+						this.prepareArray();
+					}, response => {
+						alert('Error');
+					});
+				}, response => {
+					alert('Error');
+				});
+				console.log('Recibi', message.message);
 			},
 			ScrollToBottom(){
      			var element = document.getElementById("containerChat");
      			console.log('Element: ', element);
-    			element.scrollTop =1000;
+    			element.scrollTop =20000;
     			console.log('Altura', 500);
 			}
 		}, 
